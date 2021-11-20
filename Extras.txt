@@ -1,0 +1,56 @@
+// std :: distance 
+--> Takes two iterators and calculate distance between them
+Eg. :
+ // vector<int> v{1, 2, 3, 4};
+					
+// std :: distance(v.begin(), v.end());  -> It will return "4" as from v.begin(), to v.end() there are 4 elements!
+
+## in general 
+std :: distance(it1, it2) --> calculates distance in the range -> [it1, it2)
+
+// for printing matrix
+fo(i, n) fo(j, m) cout << vv[i][j] << " \n"[j == m - 1];
+
+// Set insert()
+insert( ): Its time complexity is O(logN), when only element is inserted and O(1) when position is also given.
+
+// P[a] - P[b] == a - b ? (This kind of problem ?) -> This equation can be converted to ->
+																		
+																( P[a] - a == P[b] - b );
+
+
+// Ordered Set ??
+https://www.geeksforgeeks.org/ordered-set-gnu-c-pbds/
+**I have commented out both ordered_set and ordered_mutiset but there's a issue in Ordered_multiset ---->
+																					
+																					lower_bound works as upper_bound and vice - versa
+
+How to calculate number of distinct element in a container (string, vector, etc)?
+--> ** sort(x.begin(), x.end());
+    int diff = unique(x.begin(), x.end()) - x.begin(); **
+// diff -> Number of unique elements
+
+
+Wants to know container(string, etc.) is palindrome or not?
+Use ----->>>>  
+-->> equal(temp.begin(), temp.begin() + temp.size() / 2, temp.rbegin())
+// equal algorithm
+
+
+Interesting -> std :: transform() { Read Both }
+GeeksForGeeks -> https://www.geeksforgeeks.org/transform-c-stl-perform-operation-elements/
+cppreference -> https://www.cplusplus.com/reference/algorithm/transform/
+
+// Something interesting -> 
+x|y - y == x&(~y)
+
+*************************
+
+// Pascal's Triangle -> Triiangle of Binomial coefficients
+It follows this rule -> a[i][j] = a[i - 1][j] + a[i - 1][j - 1];
+
+*************************
+
+
+// Some Very Important Things regarding CP
+1) Do not exit the loop while taking input, it will kill you. :(
