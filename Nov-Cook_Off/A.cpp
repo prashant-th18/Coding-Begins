@@ -37,14 +37,20 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n; cin >> n;
+    int i = 1;
+    while(n--)
+    {
+        cout << (i) << ' ';
+        i += 2;
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

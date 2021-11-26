@@ -37,7 +37,27 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n, x; cin >> n >> x;
+    vector<bool> v(n + 1, false);
+    vector<int> help(n);
+    for (int i = 0; i < n; i++) {
+        cin >> help[i];
+    }
+    int cnt = 0, index = -1;
+    while(1)
+    {
+        if(v[x])
+        {
+            break;
+        }
+        else
+        {
+            v[x] = true;
+            x = help[x - 1];
+        }
+        ++cnt;
+    }
+    cout << cnt;
     return 0;
 }
 int32_t main() {

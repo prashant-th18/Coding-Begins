@@ -37,14 +37,34 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, k; cin >> n >> k;
+    ll sum {};
+    int cnt = 0;
+    deque<ll> dq;
+    for (int i = 0; i < n * k; i++) {
+        ll tt; cin >> tt; dq.push_back(tt);
+    }
+    int res = n / 2 + 1;
+    while(!dq.empty())
+    {
+        ++cnt;
+        if(cnt == res)
+        {
+            sum += dq.back();
+            int cc = n - (n / 2 + 1);
+            while(cc--) dq.pop_front();
+            cnt = 0;
+        }
+        dq.pop_back();
+    }
+    cout << sum;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -37,25 +37,79 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n; cin >> n;
+    vector<ll> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+    ll sum = 0;
+    for (int i = 0; i < n - 2; ++i)
+    {
+        for (int j = i + 2; j < n; ++j)
+        {
+            ll want = (v[j] + v[i]) / 2;
+            int s = i, e = j;
+            ll ans = 0;
+            while(s <= e)
+            {
+                int mid = (s + e) / 2;
+                if(v[mid] < want)
+                {
+                    ans = v[mid];
+                    s = mid + 1;
+                }
+                else e = mid - 1;
+            }
+            ll maybe = 0;
+            maybe = max(maybe, (ans - v[i]) * (v[j] - ans));
+            s = i, e = j;
+            while(s <= e)
+            {
+                int mid = (s + e) / 2;
+                if(v[mid] == want)
+                {
+                    ans = v[mid];
+                    break;
+                }
+                else if(v[mid] < want) s = mid + 1;
+                else e = mid - 1;
+            }
+            maybe = max(maybe, (ans - v[i]) * (v[j] - ans));
+            s = i, e = j;
+            while(s <= e)
+            {
+                int mid = (s + e) / 2;
+                if(v[mid] > want)
+                {
+                    ans = v[mid];
+                    e = mid - 1;
+                }
+                else s = mid + 1;
+            }
+            maybe = max(maybe, (ans - v[i]) * (v[j] - ans));
+            // cout << maybe << '\n';
+            sum += maybe;
+        }
+    }
+    cout << sum;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;
         }
-        #ifdef LOCAL
-            cout << '\n' << "##################";
-        #endif
+#ifdef LOCAL
+        cout << '\n' << "##################";
+#endif
         cout << '\n';
     }
-    #ifdef LOCAL
-        cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
 }
 // -> Keep It Simple Stupid!

@@ -37,14 +37,51 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n; cin >> n;
+    if(!(n & 1))
+    {
+        cout << 0;
+    }
+    else
+    {
+        // saara odd toh -1
+        ll z = n;
+        bool odd = true;
+        while(z != 0)
+        {
+            int tt = z % 10;
+            if(!(tt & 1))
+            {
+                odd = false;
+                break;
+            }
+            z /= 10;
+        }
+        if(odd)
+        {
+            cout << -1;
+        }
+        else
+        {
+            string ss = to_string(n);
+            int temp = ss[0] - '0';
+            if(!(temp & 1))
+            {
+                cout << 1;
+            }
+            else
+            {
+                cout << 2;
+            }
+        }
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

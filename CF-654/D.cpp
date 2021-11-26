@@ -37,14 +37,51 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n, k; cin >> n >> k;
+    vector<vector<int>> v(n, vector<int>(n, 0));
+    int column = 0;
+    while(k > 0)
+    {
+        int cc = column++, rr = 0;
+        while(k != 0 && rr < n)
+        {
+            int ct = cc++;
+            if(ct >= n) ct -= n;
+            v[rr++][ct] = 1;
+            --k;
+        }
+
+    }
+    int maxr = INT_MIN, minr = INT_MAX, minc = INT_MAX, maxc = INT_MIN;
+    for (int i = 0; i < n; i++) {
+        int tt = 0;
+        for (int j = 0; j < n; j++) {
+            tt += v[i][j];
+        }
+        maxr = max(maxr, tt);
+        minr = min(minr, tt);
+    }
+    for (int j = 0; j < n; j++) {
+       int tt = 0;
+       for (int i = 0; i < n; i++) {
+           tt += v[i][j];
+       }
+       maxc = max(maxc, tt);
+       minc = min(minc, tt);
+    }
+    cout << (maxr - minr) * (maxr - minr) + (maxc - minc) * (maxc - minc) << '\n';
+    for(auto val : v)
+    {
+        for(auto vv : val) cout << vv;
+            cout << '\n';
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

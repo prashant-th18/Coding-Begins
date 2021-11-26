@@ -37,7 +37,48 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, l, r; cin >> n >> l >> r;
+    ll one, two, three;
+    one = two = three = 0;
+    three += (r / 3 - (l - 1) / 3);
+    ll tt = (r / 3 - ((l + 2) / 3));
+    one += max(0LL, tt); two += max(0LL, tt);
+    ll d1 = (l + 2) / 3 * 3 - l;
+    if(d1 >= 2)
+    {
+        one++; two++;
+    }
+    else if(d1 == 1) two++;
+    ll d2 = r - (r / 3 * 3);
+    if(r - l >= 3)
+    {
+    if(d2 >= 2) { one++; two++; }
+    else if(d2 == 1) one++;
+    }
+    debug(one);
+    debug(two);
+    debug(three);
+    ////////////////////////////////
+    vector<ll> dp(n + 1, 0LL);
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        if(i == 1)
+        {
+            dp[i] = three % MOD * dp[i - 1];
+        }
+        else if(i == 2)
+        {
+            dp[i] = three * dp[i - 1] % MOD;
+            dp[i] = (dp[i] + (one * two) % MOD * dp[i - 2] % MOD) % MOD;
+        }
+        else
+        {
+            dp[i] = ((three * dp[i - 1] % MOD + (two * one % MOD) * dp[i - 2] % MOD) % MOD);
+            dp[i] = (((dp[i] + (one * dp[i - 3] % MOD)) % MOD + (two * dp[i - 3] % MOD)) % MOD);
+        }
+        debug(dp[i]);
+    }
+    cout << dp[n];
     return 0;
 }
 int32_t main() {

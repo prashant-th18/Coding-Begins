@@ -4,9 +4,9 @@
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include <bits/stdc++.h>
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
 #define MOD 1000000007
 typedef long long ll;
@@ -24,8 +24,8 @@ typedef long double ld;
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
-// #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
+#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+//#define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
 template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
 template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
@@ -37,14 +37,48 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n; cin >> n;
+    int a, b; cin >> a >> b; // a minimum among left,,,,,   b maximum among right
+    deque<int> left, right;
+    left.push_back(a), right.push_back(b);
+    for(int i = a - 1; i >= 1; --i)
+    {
+        if(i == b) continue;
+        right.push_back(i);
+        if(sz(right) > n / 2)
+        {
+            cout << -1;
+            return 0;
+        }
+    }
+    for(int i = b + 1; i <= n; ++i)
+    {
+        if(i == a) continue;
+        left.push_back(i);
+        if(sz(left) > n / 2)
+        {
+            cout << -1;
+            return 0;
+        }
+    }
+    for(int i = a + 1; i < b; ++i)
+    {
+        if(sz(left) < n / 2)
+        {
+            left.push_back(i);
+        }
+        else
+            right.push_back(i);
+    }
+    for(auto val : left) cout << val << ' ';
+    for(auto val : right) cout << val << ' ';
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

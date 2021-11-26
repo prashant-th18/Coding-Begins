@@ -37,15 +37,39 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    string a, b; cin >> a >> b;
+    string whole(26, '.');
+    iota(all(whole), 'a');
+    debug(whole);
+    vector<ll> v(26, INT_MAX);
+    for(auto val : b)
+    {
+        ll index = (int)whole.find(val);
+        for (int i = 0; i < 26; i++) {
+            if(index >= i)
+            {
+                v[i] = min(v[i], min(index - i, i + 1 + 25 - index));
+            }
+            else
+            {
+                v[i] = min(v[i], min(i - index, 26 - i + index));
+            }
+        }
+    }
+    ll sum = 0;
+    for (int i = 0; i < sz(a); i++) {
+        sum += v[a[i] - 97];
+    }
+    cout << sum;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
+        cout << "Case #" << i << ": ";
         if (solve()) {
             break;
         }

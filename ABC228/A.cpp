@@ -37,7 +37,24 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int a, b, c; cin >> a >> b >> c;
+    if(a < b)
+    {
+        if(a <= c && c < b) cout << "Yes";
+        else cout << "No";
+    }
+    else
+    {
+        if(c >= a)
+        {
+            cout << "Yes";
+        }
+        else
+        {
+            if(c < b) cout << "Yes";
+            else cout << "No";
+        }
+    }
     return 0;
 }
 int32_t main() {

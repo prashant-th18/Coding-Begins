@@ -37,14 +37,91 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n, occ {}; cin >> n;
+    string s; cin >> s;
+    vector<set<pair<int, char>>> v;
+    string same = "abacaba";
+    for (int i = 0; i < n - 6; i++) {
+        string temp = s.substr(i, 7);
+        if(temp == same) ++occ;
+        set<pair<int, char>> tt;
+        int j = 0;
+        bool flag = true;
+        while(j < 7)
+        {
+            if(temp[j] == '?') tt.insert(pair(i + j, same[j]));
+            else
+            {
+                if(temp[j] != same[j])
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            ++j;
+        }
+        if(flag)
+        {
+           if(sz(tt) > 0) v.push_back(tt); 
+        }
+    }
+    if(occ > 1)
+    {
+        cout << "No";
+        return 0;
+    }
+    if(occ == 1)
+    {
+        cout << "Yes\n";
+        for (int i = 0; i < n; i++) {
+           if(s[i] == '?') cout << 'z';
+           else cout << s[i];
+        }
+        return 0;
+    }
+    if(sz(v) > 0)
+    {
+        sort(v.begin(), v.end(), [&](set<pair<int, char>> a, set<pair<int, char>> b) {
+                return sz(a) < sz(b);
+                });
+        int in = -1;
+        bool possible = false;
+        for (int i = 0; i < sz(v); i++) {
+            bool check = true;
+            for (int j = 0; j < sz(v); j++) {
+                if(i == j) continue;
+                if(v[i] == v[j]) { check = false; break; }
+            }
+            if(check)
+            {
+                in = i;
+                possible = true;
+                break;
+            }
+        }
+        if(possible)
+        {
+            for(auto val : v[in])
+            {
+                s[val.ff] = val.ss;
+            }
+            cout << "Yes\n";
+            for(auto val : s)
+            {
+                if(val == '?') cout << 'z';
+                else cout << val;
+            }
+            return 0;
+        }
+    }
+    cout << "No";
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

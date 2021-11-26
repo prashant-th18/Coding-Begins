@@ -36,15 +36,91 @@ void _print(char a) {cout << a;}
 void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
+class group
+{
+    public:
+        ll a, b, c, d;
+    group()
+    {
+        a = b = c = d = -1;
+    }
+    group(ll a1, ll b1, ll c1, ll d1)
+    {
+        this -> a = a1;
+        this -> b = b1;
+        this -> c = c1;
+        this -> d = d1;
+    }
+};
 int solve() {
-     
+    ll x, sum {}; cin >> x;
+    int t1; cin >> t1;
+    vector<group> v;
+    for (int i = 0; i < t1; i++) {
+        ll p1, p2; cin >> p1 >> p2;
+        v.push_back(group(p1, p2, -1, 1));
+        sum += p2;
+    }
+    int t2; cin >> t2;
+    for (int i = 0; i < t2; i++) {
+        ll p1, p2, p3; cin >> p1 >> p2 >> p3;
+        v.push_back(group(p1, p2, p3, 2));
+    }
+    sort(v.begin(), v.end(), [&](group A, group B) { return A.a < B.a; } );
+    ll s = 0, e = sum + 1, ans = 0;
+    while(s <= e)
+    {
+        ll mid = (s + e) / 2;
+        ll tt = mid;
+        bool check = false;
+        for (int i = 0; i < sz(v); i++) {
+            int type = v[i].d;
+            if(type == 1)
+            {
+                ll req = v[i].b;
+                if(tt >= req)
+                {
+                    tt -= req;
+                }
+                else
+                {
+                    check = true;
+                    break;
+                }
+            }
+            else
+            {
+                if(tt >= v[i].b)
+                {
+                    tt += v[i].c;
+                }
+            }
+        }
+        if(check)
+        {
+            s = mid + 1;
+        }
+        else
+        {
+            if(tt > 0)
+            {
+                ans = mid;
+                e = mid - 1;
+            }
+            else
+            {
+                s = mid + 1;
+            }
+        }
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

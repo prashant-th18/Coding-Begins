@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -37,25 +37,36 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, r; cin >> n >> r;
+    ll ans = 0;
+    if (r >= n)
+    {
+        ++ans;
+        ans += ((n - 1) * (n) / 2);
+    }
+    else
+    {
+        ans += (r) * (r + 1) / 2;
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;
         }
-        #ifdef LOCAL
-            cout << '\n' << "##################";
-        #endif
+#ifdef LOCAL
+        cout << '\n' << "##################";
+#endif
         cout << '\n';
     }
-    #ifdef LOCAL
-        cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
 }
 // -> Keep It Simple Stupid!

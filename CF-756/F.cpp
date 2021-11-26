@@ -37,14 +37,65 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, s1;
+    cin >> n >> s1;
+    vector<ll> a(n);
+    for (ll &val : a) {
+        cin >> val;
+    }
+    int anss = -1, anse = -1;
+    int s = 0, e = 0;
+    ll sum = s1;
+    ll maxx = LLONG_MIN;
+    while(s < n && e < n)
+    {
+        if(s == e && (sum + a[s]) < 0)
+        {
+            sum = s1;
+            ++s, ++e;
+            continue;
+        }
+        sum += (a[e]);
+        if(sum >= 0)
+        {
+            if(e - s > maxx)
+            {
+                maxx = e - s;
+                anss = s, anse = e;
+            }
+            ++e;
+        }
+        else
+        {
+            while(s <= e)
+            {
+                sum -= a[s];
+                if(sum >= 0)
+                {
+                    if(e - s > maxx)
+                    {
+                        maxx = e - s;
+                        anss = s, anse = e;
+                    }
+                    break;
+                }
+                ++s;
+            }
+        }
+    }
+    if(anss == -1 && anse == -1)
+    {
+        cout << -1;
+        return 0;
+    }
+    cout << anss + 1 << ' ' << anse + 1;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

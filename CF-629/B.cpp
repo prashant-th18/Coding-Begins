@@ -37,14 +37,49 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, k; cin >> n >> k;
+    auto ncr = [&](ll nz, ll rz) -> ll
+    {
+        if(rz == 0) return 1;
+        else if(rz == 1) return nz;
+        else return nz * (nz - 1) / 2;
+    };
+    ll acnt = n - 2, bcnt = 2;
+    string res = "";
+    ll temp = n * (n - 1) / 2;
+    while(temp != 0)
+    {
+        if(bcnt == 0)
+        {
+            temp = 0;
+            n = 0;
+            res += string(acnt, 'a');
+        }
+        else
+        {
+            ll tt = ncr(n - 1, bcnt - 1);
+            if(k > (temp - tt))
+            {
+                res += "b"; -- bcnt;
+                k -= (temp - tt);
+                temp = tt;
+            }
+            else
+            {
+                res += "a"; --acnt;
+                temp -= tt;
+            }
+            --n;
+        }
+    }
+    cout << res;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

@@ -1,12 +1,55 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-#define uid(a, b) uniform_int_distribution<int>(a, b)(rng)
 int main()
 {
-	int n = 100;
-	cout << n << '\n';
-	while(n--)
-	cout << uid(0, 3) << ' ';
+	vector<int> mp(26, 0);
+	string s;
+	cin >> s;
+	int cnt = 0;
+	int ch = -1;
+	for (int i = 0; i < (int)s.size(); ++i)
+	{
+		++mp[s[i] - 65];
+	}
+	for (int i = 0; i < 26; ++i)
+	{
+		if (mp[i] & 1)
+		{
+			ch = i;
+			cnt++;
+		}
+	}
+	if (cnt > 1)
+	{
+		cout << "NO SOLUTION";
+		return 0;
+	}
+	string z = string((int)s.size(), '.');
+	int si = 0, ei = (int)z.size() - 1;
+	for (int i = 0; i < 26; ++i)
+	{
+		if(!(mp[i] & 1))
+		{
+			for (int j = 0; j < mp[i]; ++j)
+			{
+				if(j & 1)
+				{
+					z[si++] = (char)(65 + i);
+				}
+				else
+				{
+					z[ei--] = (char)(65 + i);
+				}
+			}
+		}
+	}
+	if (ch != -1)
+	{
+		while(si <= ei)
+		{
+			z[si++] = (char)(65 + ch);
+		}
+	}
+	cout << z;
 	return 0;
 }

@@ -1,33 +1,35 @@
-#include<bits/stdc++.h>
+#include <iostream>
 using namespace std;
-#define ll long long
+// Call by value
+// When we want to write a swap function using call by value we will use *pointers*
+void swap_value(int* first, int* second)
+{
+    int temp = *first;
+    *first = *second;
+    *second = temp;
+}
+// Call By reference
+// When we want to write a swap function using call by reference we will use *&*
+void swap_reference(int& first, int &second)
+{
+    int c = first;
+    first = second;
+    second = c;
+}
 int main()
 {
-    // cout << fixed << setprecision(0);
-    // ios_base::sync_with_stdio(false);
-    // cin.tie(NULL);
-    //////
-    int t = 1;
-    // cin >> t; // We are taking test cases
-    while (t--)
-    {
-        ll n; cin >> n;
-        vector<pair<int, int>> v(n);
-        for (int i = 0; i < n; ++i) cin >> v[i].first, v[i].second = i;
-        vector<int> print(n);
-        sort(v.begin(), v.end(), [&](pair<int, int> a, pair<int, int> b)
-        {
-            return a.first > b.first;
-        });
-        for(int i = 0; i < n; ++i)
-        {
-            print[v[i].second] = i + 1;
-        }
-        for(int i = 0; i < n; ++i)
-        {
-            cout << print[i] << ' ';
-        }
+    int first = 10, second = 20;
+    cout << "First is " << first << " & Second is " << second << endl;
+    // Using Call By Value
+    swap_value(&first, &second);
+    cout << "First is " << first << " & Second is " << second << endl;
 
-    }
+
+
+    first = 10; second = 20;
+    cout << endl << endl << "First is " << first << " & Second is " << second << endl;
+    // Using Call By Reference
+    swap_reference(first, second);
+    cout << "First is " << first << " & Second is " << second << endl;
     return 0;
 }

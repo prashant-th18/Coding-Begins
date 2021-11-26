@@ -37,14 +37,33 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll a, b; cin >> a >> b;
+    // 1 3
+    // 2 2
+    // 3 1
+    ll minn = min(a, b);
+    ll maxx = max(a, b);
+    ll extra = (max(a, b) - min(a, b)) / 2;
+    if(extra > min(a, b))
+    {
+        cout << min(a, b);
+    }
+    else
+    {
+        ll cnt = 0;
+        cnt += extra;
+        minn -= extra;
+        maxx -= (3 * extra);
+        cnt += max(0LL, min(minn, maxx) / 2LL);
+        cout << cnt;
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

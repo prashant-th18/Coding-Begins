@@ -37,7 +37,74 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n, m, k1; cin >> n >> m >> k1;
+    vector<int> a(n);
+    for (int &val : a) {
+        cin >> val;
+    }
+    vector<int> b(m);
+    for (int &val : b) {
+        cin >> val;
+    }
+    // Let's get the divisors of k
+    // Store it in pair<int, int>  
+    vector<pair<int, int>> v;
+    for(ll i = 1; i * i <= k1; ++i)
+    {
+        if(k1 % i == 0)
+        {
+            if(k1 / i == i)
+                v.push_back(pair(i, k1 / i));
+            else
+            {
+                v.push_back(pair(i, k1 / i));
+                v.push_back(pair(k1 / i, i));
+            }
+        }
+    }
+    ll sum = 0;
+    // For every second thing of pair search how many consecutives lie in B
+    // Similiar for A
+    for (int i = 0; i < sz(v); i++) {
+        int occa = v[i].first;
+        int occb = v[i].second;
+        ll cnt2 = 0, cnt1 = 0;
+        int j = 0, k = 0;
+        while(j < m && k < m)
+        {
+            if(b[k] == 0) j = k + 1, k = j;
+            else
+            {
+                if(k - j + 1 < occb)
+                {
+                    ++k;
+                }
+                else
+                {
+                    ++cnt1;
+                    ++k; ++j;
+                }
+            }
+        }
+        j = 0, k = 0;
+        while(j < n && k < n)
+        {
+            if(a[k] == 0) j = k + 1, k = j;
+            else
+            {
+                if(k - j + 1 < occa)
+                {
+                    ++k;
+                }
+                else
+                {
+                    ++cnt2; ++k; ++j;
+                }
+            }
+        }
+        sum += (cnt1 * cnt2);
+    }
+    cout << sum;
     return 0;
 }
 int32_t main() {

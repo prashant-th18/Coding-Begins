@@ -37,14 +37,76 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int n; cin >> n;
+    set<int> st;
+    vector<int> v(n);
+    for (int &val : v) {
+        cin >> val;
+        st.insert(val);
+    }
+    if(n <= 2)
+    {
+        cout << "YES";
+        return 0;
+    }
+    int s = 0, e = n - 1;
+    while(s < e)
+    {
+        if(v[s] == v[e]) ++s, --e;
+        else
+        {
+            // Asli Kaam yhi se shuru
+            // Now either suppose v[s] is deleted or v[e]
+            // Supposing v[s] is deleted
+            int s1 = s, e1 = e;
+            int deleted = v[s1];
+            ++s1;
+            bool flag = false;
+            while(s1 < e1)
+            {
+                if(v[s1] == v[e1]) ++s1, --e1;
+                else
+                {
+                    if(v[s1] == deleted) ++s1;
+                    else if(v[e1] == deleted) --e1;
+                    else
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if(flag)
+            {
+                deleted = v[e];
+                --e;
+                while(s < e)
+                {
+                    if(v[s] == v[e]) ++s, --e;
+                    else
+                    {
+                        if(v[s] == deleted) ++s;
+                        else if(v[e] == deleted) --e;
+                        else
+                        {
+                            cout << "NO";
+                            return 0;
+                        }
+                    }
+                }
+            }
+            cout << "YES";
+            return 0;
+        }
+    }
+    cout << "YES";
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

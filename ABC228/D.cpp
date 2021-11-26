@@ -4,9 +4,9 @@
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include <bits/stdc++.h>
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
 #define MOD 1000000007
 typedef long long ll;
@@ -24,7 +24,7 @@ typedef long double ld;
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
 template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
@@ -37,7 +37,32 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    int q; cin >> q;
+    int n = (1 << 20);
+    vector<ll> v(n, -1);
+    ordered_set st;
+    for (int i = 0; i < n; i++) {
+        st.insert(i);
+    }
+    while(q--)
+    {
+        ll t, x; cin >> t >> x;
+        if(t == 1)
+        {
+            ll xx = x % n;
+            auto it = st.lower_bound(xx);
+            if(it == st.end())
+            {
+                it = st.lower_bound(0);
+            }
+            v[*it] = x;
+            st.erase(*it);
+        }
+        else
+        {
+            cout << v[x % n] << '\n';
+        }
+    }
     return 0;
 }
 int32_t main() {

@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -37,25 +37,48 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
-    return 0;
+	ll a, b, x; cin >> a >> b >> x;
+	ll a1 = a;
+	int cnt = 10000;
+	while(cnt--)
+	{
+		if(a == x)
+		{
+			cout << "YES";
+			return 0;
+		}
+		a = abs(a - b);
+		b = a;
+	}
+	cnt = 10000;
+	while(cnt--)
+	{
+		if(b == x)
+		{
+			cout << "YES";
+			return 0;
+		}
+		b = abs(a1 - b);
+	}
+	cout << "NO";
+	return 0;
 }
 int32_t main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    int TET = 1;
-    //cin >> TET;
-    for (int i = 1; i <= TET; i++) {
-        if (solve()) {
-            break;
-        }
-        #ifdef LOCAL
-            cout << '\n' << "##################";
-        #endif
-        cout << '\n';
-    }
-    #ifdef LOCAL
-        cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	int TET = 1;
+	cin >> TET;
+	for (int i = 1; i <= TET; i++) {
+		if (solve()) {
+			break;
+		}
+#ifdef LOCAL
+		cout << '\n' << "##################";
+#endif
+		cout << '\n';
+	}
+#ifdef LOCAL
+	cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
 }
 // -> Keep It Simple Stupid!

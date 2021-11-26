@@ -37,14 +37,35 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    ll n; cin >> n;
+    vector<int> arr(n);
+    int index = -1;
+    for (int i = 0; i < n; ++i) {
+        cin >> arr[i];
+        if(arr[i] == n)
+        {
+            index = i;
+        }
+    }
+    if(index != 0 && index != n - 1)
+    {
+        cout << -1;
+    }
+    else
+    {
+        reverse(all(arr));
+        for(auto val : arr)
+        {
+            cout << val << ' ';
+        }
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

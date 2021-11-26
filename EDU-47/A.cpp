@@ -37,7 +37,28 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    //////////////////
+    //      AC      //
+    //////////////////
+    int n, m; cin >> n >> m;
+    vector<int> a(n);
+    for (int &val : a) {
+        cin >> val;
+    }
+    vector<int> b(m);
+    for (int &val : b) {
+        cin >> val;
+    }
+    int j = 0;
+    int cnt {};
+    for (int i = 0; i < n && j < m; i++) {
+        if(b[j] >= a[i])
+        {
+            ++cnt;
+            ++j;
+        }
+    }
+    cout << cnt;
     return 0;
 }
 int32_t main() {
