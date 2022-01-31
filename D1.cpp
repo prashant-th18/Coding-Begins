@@ -16,10 +16,12 @@ typedef long double ld;
 #define ff first
 #define ss second
 #ifdef LOCAL
-#define debug(x) cout << "----------------" << endl << #x << " : "; _print(x); cout << "-------------" << '\n';
+#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
 #else
 #define debug(x)
 #endif
+
+inline ll nxt() { ll _; cin >> _; return _; }
 
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
@@ -37,7 +39,7 @@ void _print(string a) {cout << a;}
 void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
-     
+    
     return 0;
 }
 int32_t main() {
@@ -45,17 +47,19 @@ int32_t main() {
     cin.tie(0);
     int TET = 1;
     //cin >> TET;
+    cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
-        if (solve()) {
+#ifdef LOCAL
+        cout << "##################" << '\n';
+#endif
+        if (solve())
+        {
             break;
         }
-        #ifdef LOCAL
-            cout << '\n' << "##################";
-        #endif
         cout << '\n';
     }
-    #ifdef LOCAL
-        cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
 }
 // -> Keep It Simple Stupid!

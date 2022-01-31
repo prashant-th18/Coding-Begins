@@ -1,7 +1,6 @@
-/*
-    Author : prashant_th18
-                            :)
-*/
+#ifdef LOCAL
+#define _GLIBCXX_DEBUG
+#endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include <bits/stdc++.h>
@@ -10,97 +9,100 @@
 // using namespace __gnu_pbds;
 using namespace std;
 #define MOD 1000000007
-#define ull unsigned long long
-#define ll long long
-#define ld long double
-#define pl pair<ll, ll>
-#define vl vector<ll>
-#define vpl vector<pl>
-#define pb push_back
+typedef long long ll;
+typedef long double ld;
+#define sz(s) (s.size())
 #define all(v) begin(v), end(v)
-#define PI 3.1415926535897932384626
-#define fl(i, si, ei) for(ll i = si; i < ei; ++i)
-#define nline '\n'
-#define space ' '
 #define ff first
 #define ss second
-#define sz(v) ((ll)(v).size())
-#define set_bits __builtin_popcountll
-#ifndef ONLINE_JUDGE 
-#define debug(x) cerr << #x << " : "; _print(x); cerr << nline;
+#ifdef LOCAL
+#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
 #else
 #define debug(x)
 #endif
-// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */ 
-// #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */ 
-template <typename T> void _print(vector <T> v) { cerr << "[ "; for(auto myval : v) cerr << myval << " "; cerr << "]"; }
-template <typename T1, typename T2> void _print(vector <T1, T2> v) { cerr << "[ "; for(auto myval : v) cerr << myval.ff << space << myval.ss << " "; cerr << "]"; }
-template <typename T> void _print(set <T> v) { cerr << "[ "; for(auto myval : v) cerr << myval << " "; cerr << "]"; }
-template <typename T1, typename T2> void _print(map<T1, T2> v) { cerr << "[ "; for(auto myval : v) cerr << myval.ff << space << myval.ss << " "; cerr << "]"; }
-void _print(int a) {cerr << a;}
-void _print(ll a) {cerr << a;}
-void _print(ull a) {cerr << a;}
-void _print(char a) {cerr << a;}
-void _print(string a) {cerr << a;}
-void _print(double a) {cerr << a;}
-// **`KISS**
-void solve()
-{
- 	int n; cin >> n;
- 	vector<int> v(n); for(int i = 0; i < n; ++i) cin >> v[i];   
- 	string s; cin >> s;
- 	deque<int> blue, red;
- 	for(int i = 0; i < sz(s); ++i)
- 	{
- 		if(s[i] == 'R')
- 		{
- 			red.pb(v[i]);
- 		}
- 		else
- 		{
- 			blue.pb(v[i]);
- 		}
- 	}
- 	sort(all(red)), sort(all(blue));
- 	for(int i = 1; i <= n; ++i)
- 	{
- 		if(!blue.empty())
- 		{
- 			if(blue.front() < i)
- 			{
- 				cout << "No\n";
- 				return;
- 			}
- 			else blue.pop_front();
- 		}
- 		else
- 		{
- 			if(red.front() > i)
- 			{
-                cout << "No\n";
- 				return;
- 			}
- 			else red.pop_front();
- 		}
- 	}
- 	cout << "Yes\n";
-}
-int main()
-{
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-    cout << fixed << setprecision(0);
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    int t = 1;
-    cin >> t;
-    while (t--) {
-        solve();
-        cout << nline;
+
+// mt19937 rnd(239);
+mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+// #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
+template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
+template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
+template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
+template <typename T1, typename T2> void _print(map<T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
+void _print(int a) {cout << a;}
+void _print(ll a) {cout << a;}
+void _print(char a) {cout << a;}
+void _print(string a) {cout << a;}
+void _print(double a) {cout << a;}
+// *-> KISS*
+int solve() {
+    ll n; cin >> n;
+    string s; cin >> s;
+    char maxc = 'a';
+    for (int i = 0; i < sz(s) + 1; i++) {
+        maxc = max(maxc, s[i]);
     }
-  
-    cerr << "time taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
+    debug(maxc);
+    for (char ch = maxc; ch > 'a' && sz(s) > 1; --ch)
+    {
+        vector<bool> index(sz(s), false);
+        for (int i = 0; i < sz(s); i++) {
+            if (i == 0)
+            {
+                if (s[i] == ch && s[i] == s[i + 1] + 1)
+                {
+                    index[i] = true;
+                }
+            }
+            else if (i == sz(s) - 1)
+            {
+                if (s[i] == s[i - 1] + 1 && s[i] == ch) index[i] = true;
+            }
+            else
+            {
+                if (s[i] == ch && (s[i] == s[i - 1] + 1 || s[i] == s[i + 1] + 1))
+                {
+                    index[i] = true;
+                }
+            }
+        }
+        bool status = any_of(all(index), [&](bool s1) { return s1; });
+        if (status)
+        {
+            ++ch;
+            string res = "";
+            for (int i = 0; i < sz(s); i++) {
+                if (!index[i])
+                {
+                    res += s[i];
+                }
+            }
+            s = res;
+        }
+        debug(s);
+    }
+    cout << n - sz(s);
     return 0;
 }
-// `Keep It Simple Stupid!
+int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int TET = 1;
+    //cin >> TET;
+    cout << fixed << setprecision(6);
+    for (int i = 1; i <= TET; i++) {
+#ifdef LOCAL
+        cout << "##################" << '\n';
+#endif
+        if (solve())
+        {
+            break;
+        }
+        cout << '\n';
+    }
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
+}
+// -> Keep It Simple Stupid!

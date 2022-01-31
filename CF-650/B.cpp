@@ -1,0 +1,95 @@
+#ifdef LOCAL
+    #define _GLIBCXX_DEBUG
+#endif
+// #pragma GCC optimize("O3")
+// #pragma GCC target("popcnt")
+#include <bits/stdc++.h>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
+// using namespace __gnu_pbds;
+using namespace std;
+#define MOD 1000000007
+typedef long long ll;
+typedef long double ld;
+#define sz(s) ((int)s.size())
+#define all(v) begin(v), end(v)
+#define ff first
+#define ss second
+
+// mt19937 rnd(239);
+mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+// #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
+// *-> KISS*
+int solve() {
+    int n; cin >> n;
+    vector<int> v(n);
+    for (int &val : v) {
+        cin >> val;
+    }
+    vector<int> h;
+    for (int i = 0; i < n; i++) {
+        if(i % 2 != v[i] % 2)
+        {
+            h.push_back(i);
+        }
+    }
+    int c = 0;
+    vector<bool> vis(sz(h), false);
+    for(int i = 0; i < sz(h); ++i)
+    {
+        if(vis[i]) continue;
+        bool flag = false;
+        for(int j = i + 1; j < sz(h); ++j)
+        {
+            if(vis[j]) continue;
+            if(h[i] % 2 != h[j] % 2)
+            {
+                ++c;
+                flag = true;
+                vis[i] = vis[j] = true;
+                break;
+            }
+        }
+        if(!flag)
+        {
+            cout << -1; return 0;
+        }
+    }
+    bool flag = true;
+    for(int i = 0; i < sz(h); ++i)
+    {
+        flag &= vis[i];
+    }
+    if(flag)
+    {
+        cout << c;
+    }
+    else
+    {
+        cout << -1;
+    }
+    return 0;
+}
+int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int TET = 1;
+    cin >> TET;
+    cout << fixed << setprecision(6);
+    for (int i = 1; i <= TET; i++) {
+#ifdef LOCAL
+        cout << "##################" << '\n';
+#endif
+        if (solve())
+        {
+            break;
+        }
+        cout << '\n';
+    }
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
+}
+// -> Keep It Simple Stupid!
