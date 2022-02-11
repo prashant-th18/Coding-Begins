@@ -41,12 +41,13 @@ decltype(auto) y_combinator(Fun &&fun) {
 
 // *-> KISS*
 int solve() {
-    ll n, w; 
-    cin >> n >> w;
+    ll n, x;
+    cin >> n >> x;
     vector<array<ll, 2>> v(n);
     for (int i = 0; i < n; i++) {
         cin >> v[i][0] >> v[i][1];
     }
+    /*
     vector<vector<ll>> dp(n, vector<ll>(w + 1, -1));
     auto fun = y_combinator([&](auto f, int index, int rem) -> ll
     {
@@ -54,11 +55,29 @@ int solve() {
 
         if(dp[index][rem] != -1) return dp[index][rem];
 
-        ll one = f(index - 1, rem);
+       ll one = f(index - 1, rem);
         ll two = ((v[index][0] <= rem) ? (v[index][1] + f(index - 1, rem - v[index][0])) : (one));
         return dp[index][rem] = max(one, two);
     });
     cout << fun(n - 1, w);
+    */
+    vector<vector<ll>> dp(n, vector<ll>(x + 1));
+    for(int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j <= x; j++) {
+            if(j == 0)
+            {
+                dp[i][j] = 0;
+            }
+            else
+            {
+                ll op1 = (i == 0) ? (0) : (dp[i - 1][j]);
+                ll op2 = (v[i][0] > j) ? (0) : (v[i][1] + ((i == 0) ? (0) : (dp[i - 1][j - v[i][0]])));
+                dp[i][j] = max(op1, op2);
+            }
+        }
+    }
+    cout << dp[n - 1][x];
     return 0;
 }
 int32_t main() {

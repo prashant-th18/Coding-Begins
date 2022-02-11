@@ -46,6 +46,7 @@ int solve() {
     for (int i = 0; i < n; i++) {
         cin >> h[i];
     }
+    /*
     vector<ll> dp(n, -1); // None is calculated
     auto fun = y_combinator([&](auto f, int index) -> ll
     {
@@ -61,6 +62,19 @@ int solve() {
         return dp[index] = mini;
     });
     cout << fun(n - 1);
+    */
+    vector<ll> dp(n, INT_MAX);
+    dp[n - 1] = 0;
+    for(int i = n - 2; i >= 0; --i)
+    {
+        for(int ex = 1; ex <= k; ++ex)
+        {
+            if(i + ex >= n) break;
+
+            dp[i] = min(dp[i], abs(h[i] - h[i + ex]) + dp[i + ex]);
+        }
+    }
+    cout << dp[0];
     return 0;
 }
 int32_t main() {

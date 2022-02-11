@@ -1,0 +1,7 @@
+Sn Name Age
+1 Archie 22
+2 Jughead 21
+3 Betty 23
+4 Veronica 18
+5 Joey 24
+6 Chandler 25

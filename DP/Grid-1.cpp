@@ -39,6 +39,22 @@ decltype(auto) y_combinator(Fun &&fun) {
 }
 // use -> auto gcd = y_combinator([](auto gcd, int a, int b) -> int { return b == 0 ? a : gcd(b, a % b);});
 
+#ifdef LOCAL
+#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
+#else
+#define debug(x)
+#endif
+
+template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
+template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
+template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
+template <typename T1, typename T2> void _print(map<T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
+void _print(int a) {cout << a;}
+void _print(ll a) {cout << a;}
+void _print(char a) {cout << a;}
+void _print(string a) {cout << a;}
+void _print(double a) {cout << a;}
+
 // *-> KISS*
 int solve() {
     int h, w; cin >> h >> w;
@@ -48,6 +64,7 @@ int solve() {
             cin >> v[i][j];
         }
     }
+    /*
     vector<vector<int>> dp(h, vector<int>(w, -1));
     // (h - 1, w - 1) -> (0, 0)
     auto fun = y_combinator([&](auto f, int i, int j) -> ll
@@ -63,6 +80,26 @@ int solve() {
         return dp[i][j] = ((one_way + second_way) % MOD);
     });
     cout << fun(h - 1, w - 1);
+    */
+    vector<vector<int>> dp(h, vector<int>(w, 0));
+    for(int i = h - 1; i >= 0; --i)
+    {
+        for(int j = w - 1; j >= 0; --j)
+        {
+           if(i == h - 1 && j == w - 1)
+           {
+               dp[i][j] = 1;
+           }
+           else
+           {
+               int op1 = (j == w - 1) ? (0) : (dp[i][j + 1]);
+               int op2 = (i == h - 1) ? (0) : (dp[i + 1][j]);
+               dp[i][j] = (op1 + op2) % MOD;
+           }
+           if(v[i][j] == '#') dp[i][j] = 0;
+        }
+    }
+    cout << dp[0][0];
     return 0;
 }
 int32_t main() {

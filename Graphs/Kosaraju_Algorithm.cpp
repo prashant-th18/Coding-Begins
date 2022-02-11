@@ -17,7 +17,8 @@ void dfs(int node)
             dfs(val);
         }
     }
-    order.push_back(node); // why? -> Because till now, all the nodes which will have lesser out-time will be 
+    order.push_back(node); // why? -> Because till now, 
+                           // all the nodes which will have lesser out-time will be 
                            // pushed into the order vector
 }
 void dfs1(int node)

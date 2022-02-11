@@ -33,6 +33,7 @@ int32_t main() {
     for (int i = 0; i < n; i++) {
         cin >> v[i];
     }
+    /*
     sort(all(v));
     v.resize(unique(all(v)) - v.begin());
     vector<vector<ll>> dp(x + 1, vector<ll>(n + 1, INT_MAX));
@@ -55,6 +56,21 @@ int32_t main() {
          return dp[sum][index];
     });
     cout << ((fun(sz(v) - 1, x) == -2) ? (-1) : (dp[x][sz(v) - 1]));
+    */
+    vector<int> dp(x + 1, -1);
+    dp[0] = 0;
+    for(int i = 1; i <= x; ++i)
+    {
+        int ss = 1e7;
+        for(auto coins : v)
+        {
+            if(coins > i) continue;
+            int steps = dp[i - coins];
+            if(steps != -1) ss = min(ss, 1 + steps);
+        }
+        if(ss != (int)1e7) dp[i] = ss;
+    }
+    cout << dp[x];
     return 0;
 }
 // -> Keep It Simple Stupid!

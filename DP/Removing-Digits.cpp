@@ -42,6 +42,7 @@ decltype(auto) y_combinator(Fun &&fun) {
 // *-> KISS*
 int solve() {
     int n; cin >> n;
+    /*
     vector<ll> dp(n + 1, -1);
     auto fun = y_combinator([&](auto f, int num) -> ll
     {
@@ -65,6 +66,23 @@ int solve() {
         return dp[num] = minn;
     });
     cout << fun(n);
+    */
+    vector<int> dp(n + 1, 0);
+    dp[0] = 0;
+    for(int i = 1; i <= n; ++i)
+    {
+        int temp = i;
+        int minSteps = 1e9;
+        while(temp)
+        {
+            int rem = temp % 10;
+            temp /= 10;
+            if(rem == 0) continue;
+            minSteps = min(minSteps, 1 + dp[i - rem]);
+        }
+        dp[i] = minSteps;
+    }
+    cout << dp[n];
     return 0;
 }
 int32_t main() {
