@@ -30,11 +30,11 @@ int main()
         int curr_node = pq.top().second; // Node which is having minimum distance till now
         int node_dis = pq.top().first; // minimum distance
         
+        pq.pop();
         if(dist[curr_node] != node_dis) continue; 
        // What above line means that okay, we have found earlier a minimum distance to node "curr_node"
        // And it's neighbour has been minimized using that minimum distance, and now you don't need
        // to process this node again
-        pq.pop();
         for(const auto& [neighbour, weight] : v[curr_node])
         {
             if(node_dis + weight < dist[neighbour])
@@ -45,7 +45,21 @@ int main()
             }
         }
     }
+    // Time Complexity -> O(Nlog(N) + Mlog(N)) ~ O(Mlog(N))
     cout << "Distance Vector\n";
     for(int i = 1; i <= n; ++i) cout << dist[i] << ' ';
     return 0;
 }
+/*
+ * You can improve the performance a little bit more if you don't store pairs in the containers,
+ * but only the vertex indices. In this case we must overload the comparison operator: it must compare two vertices using the distances stored in .
+
+As a result of the relaxation, the distance of some vertices will change. 
+However the data structure will not resort itself automatically. 
+In fact changing distances of vertices in the queue, might destroy the data structure. 
+As before, we need to remove the vertex before we relax it, and then insert it again afterwards.
+
+Since we only can remove from set, this optimization is only applicable for the set method, 
+and doesn't work with priority_queue implementation.
+In practice this significantly increases the performance, especially when larger data types are used to store distances, like long long or double.
+*/
