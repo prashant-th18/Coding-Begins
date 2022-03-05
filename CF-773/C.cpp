@@ -24,47 +24,41 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
-        {
-            if(v[i] == v[i - 1] + v[i - 2])
-            {
-                flag = false;
-                break;
-            }
-        }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
+    ll n, x; cin >> n >> x;
+    map<ll, ll> multi;
+    map<ll, ll> cnt;
+    priority_queue<ll> pq;
     for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
+        ll tt; cin >> tt;
+        pq.push(tt);
+        multi[tt * x]++;
+        cnt[tt]++;
     }
-    */
+    ll ans = 0;
+    while(!pq.empty())
+    {
+        ll t = pq.top(); pq.pop();
+        if(cnt[t] == 0) continue;
+        if(multi[t] > 0)
+        {
+            --multi[t];
+            --cnt[t];
+            --cnt[t / x];
+        }
+        else
+        {
+            ++ans;
+            --cnt[t];
+        }
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

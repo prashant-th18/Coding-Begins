@@ -24,47 +24,54 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
+    string s; cin >> s;
+    int n = sz(s);
+    vector<array<ll, 2>> dp(n, {0, 0});
+    for(int i = n - 1; i >= 0; --i)
+    {
+        if(i == n - 1)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
+            dp[i][0] = (s[i] != '1');
+            dp[i][1] = (s[i] != '0');
+        }
+        else
+        {
+            if(s[i] == '?')
             {
-                flag = false;
-                break;
+                dp[i][1] = 1 + dp[i + 1][0];
+                dp[i][0] = 1 + dp[i + 1][1];
+            }
+            else if(s[i] == '0')
+            {
+                dp[i][0] = 1 + dp[i + 1][1];
+            }
+            else
+            {
+                dp[i][1] = 1 + dp[i + 1][0];
             }
         }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    ll ans = 0;
+    for(int i = 0; i < n; ++i)
+    {
+        if(s[i] != '?') continue;
+        int j = i;
+        ll cnt = 0;
+        while(j < n && s[j] == '?') ++j, ++cnt;
+        ans -= (cnt * (cnt + 1) / 2);
+        i = j - 1;
+    }
+    for (int i = 0; i < n; i++) {
+        ans += (dp[i][0] + dp[i][1]);
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

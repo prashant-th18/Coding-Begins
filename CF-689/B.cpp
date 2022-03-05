@@ -24,47 +24,41 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
-        {
-            if(v[i] == v[i - 1] + v[i - 2])
+    int n, m; cin >> n >> m;
+    vector<vector<char>> grid(n, vector<char>(m, '.'));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> grid[i][j];
+        }
+    }
+    vector<vector<int>> dp(n, vector<int>(m + 1, 0));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            dp[i][j + 1] = ((grid[i][j] == '*') ? (dp[i][j] + 1) : (0));
+        }
+    }
+    ll ans = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            int row = i, cnt = 1;
+            int rc = j, lc = j;
+            while(rc < m && lc >= 0 && row < n && (dp[row][rc + 1] - dp[row][lc] == cnt))
             {
-                flag = false;
-                break;
+                cnt += 2;
+                ++ans;
+                ++row;
+                lc--; rc++;
             }
         }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

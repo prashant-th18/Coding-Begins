@@ -21,50 +21,72 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
+int N = 1e6;
+vector<ll> primes;
+vector<bool> v;
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
+    int n; cin >> n;
+    map<ll, ll> mp;
+    vector<ll> ans;
+    for (int i = 0; i < n; i++) {
+        ll tt; cin >> tt;
+        ans.push_back(tt);
+        for(ll & val : primes)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
+            if(val * val > tt) break;
+            ll c = 0;
+
+            while(tt % val == 0) ++c, tt /= val;
+
+            if(c != 0)
             {
-                flag = false;
-                break;
+                mp[val]++;
             }
         }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
+        if(tt >= 2) mp[tt]++;
     }
-    */
+    ll ubound = (2 * n + 2) / 3;
+    int change = 0;
+    bool flag = false;
+    for(const auto& val : mp)
+    {
+        // n - val.ss <= ubound CORRECT
+        if(n - val.ss <= ubound)
+        {
+            for(ll i = 0; i < n; ++i)
+            {
+                if(ans[i] % val.ff != 0)
+                {
+                    ++change;
+                    ans[i] = val.ff;
+                }
+            }
+            flag = true;
+            break;
+        }
+    }
+    assert(flag);
+    for(auto val : ans) cout << val << ' ';
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    v.assign(N, true);
+    v[1] = v[0] = false;
+    for(int i = 4; i < N; i += 2) v[i] = false;
+    primes.push_back(2);
+    for(ll i = 3; i < N; i += 2)
+    {
+        if(v[i])
+        {
+            primes.push_back(i);
+            for(ll j = i * i; j < N; j += 2 * i) v[j] = false;
+        }
+    }
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

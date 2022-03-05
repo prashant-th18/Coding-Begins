@@ -41,67 +41,56 @@ void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
     int n; cin >> n;
+    vector<int> v(n);
+    for (int &val : v) {
+        cin >> val;
+    }
     string s; cin >> s;
-    set<pair<int, int>> st;
-    vector<int> help;
-    int cnt = 1, c = 0;
-    for(int i = 1; i < n; ++i)
+    auto sorted = v;
+    sort(sorted.begin(), sorted.end());
+    if(sorted == v)
     {
-        if(s[i] == s[i - 1])
+        cout << 0;
+    }
+    else
+    {
+        int cc = count(all(s), 'N');
+        if(cc == 0 || cc == n)
         {
-            ++cnt;
+            cout << -1;
         }
         else
         {
-            st.insert({-cnt, c++});
-            help.push_back(cnt);
-            cnt = 1;
-        }
-    }
-    int op = 0;
-    st.insert({-cnt, c++});
-    help.push_back(cnt);
-    for(int i = 0; i < c; ++i)
-    {
-        debug(help[i]);
-        if(help[i] == 1)
-        {
-            ++op;
-            auto f = *(st.begin());
-            if(f.first != -1)
+            int f = -1, si = -1;
+            for(int i = 0; i < n; ++i) 
             {
-                st.erase({-help[i], i});
-                help[i] = 0;
-                help[f.second]--;
-                f.first++;
-                st.erase(st.begin());
-                st.insert(f);
+                if(sorted[i] != v[i])
+                {
+                    if(f == -1) f = i;
+                    si = i;
+                }
+            }
+            array<ll, 2> arr1 = {0, 0}, arr2 = {0, 0};
+            for(int i = f; i >= 0; --i)
+            {
+                arr1[0] += (s[i] == 'N');
+                arr1[1] += (s[i] == 'S');
+            }
+            for(int i = si; i < n; ++i)
+            {
+                arr2[0] += (s[i] == 'N');
+                arr2[1] += (s[i] == 'S');
+            }
+            if((arr1[0] != 0 && arr2[1] != 0) || (arr1[1] != 0 && arr2[0] != 0))
+            {
+                cout << 1;
             }
             else
             {
-                st.erase(st.begin());
-                help[i]--;
-                if(sz(st) == 0)
-                {
-                    break;
-                }
-                f = *(st.rbegin());
-                help[f.second]--;
-                st.erase(f);
+                cout << 2;
             }
         }
-        else if(help[i] > 1)
-        {
-            ++op;
-            auto f = st.find({-help[i], i});
-            help[i] = 0;
-            st.erase(f);
-        }
     }
-    for(int i = 0; i < c; ++i){ 
-        assert(help[i] == 0);
-    }
-    cout << op;
     return 0;
 }
 int32_t main() {

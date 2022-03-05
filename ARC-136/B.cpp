@@ -41,74 +41,83 @@ void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    string s; cin >> s;
-    set<pair<int, int>> st;
-    vector<int> help;
-    int cnt = 1, c = 0;
-    for(int i = 1; i < n; ++i)
+    vector<int> a(n);
+    for (int &val : a) {
+        cin >> val;
+    }
+    vector<int> b(n);
+    for (int &val : b) {
+        cin >> val;
+    }
+    int j = n - 1;
+    while(j >= 0)
     {
-        if(s[i] == s[i - 1])
-        {
-            ++cnt;
-        }
+        debug(a);
+        if(a[j] == b[j]) --j;
         else
         {
-            st.insert({-cnt, c++});
-            help.push_back(cnt);
-            cnt = 1;
-        }
-    }
-    int op = 0;
-    st.insert({-cnt, c++});
-    help.push_back(cnt);
-    for(int i = 0; i < c; ++i)
-    {
-        debug(help[i]);
-        if(help[i] == 1)
-        {
-            ++op;
-            auto f = *(st.begin());
-            if(f.first != -1)
+            int ind = -1;
+            for(int i = j - 1; i >= 0; --i) if(a[i] == b[j]) { ind = i; break; }
+            if(ind == -1)
             {
-                st.erase({-help[i], i});
-                help[i] = 0;
-                help[f.second]--;
-                f.first++;
-                st.erase(st.begin());
-                st.insert(f);
+                cout << "No"; return 0;
             }
-            else
+            if(j - ind == 2)
             {
-                st.erase(st.begin());
-                help[i]--;
-                if(sz(st) == 0)
+                rotate(a.begin() + ind, a.begin() + ind + 2, a.begin() + ind + 3);
+                rotate(a.begin() + ind, a.begin() + ind + 2, a.begin() + ind + 3);
+                continue;
+            }
+            else if(j - ind == 1)
+            {
+                debug("in");
+                if(ind == 0)
                 {
-                    break;
+                    rotate(a.begin(), a.begin() + 1, a.begin() + 2);
+                    ++j;
                 }
-                f = *(st.rbegin());
-                help[f.second]--;
-                st.erase(f);
+                else
+                {
+                    rotate(a.begin() + ind - 1, a.begin() + ind + 1, a.begin() + ind + 1);
+                }
+                continue;
+            }
+            while(ind < j)
+            {
+                int l = min(ind + 2, j);
+                int f = ind;
+                if(l - ind < 2)
+                {
+                    f = max(0, l - 2);
+                }
+                int mid = f + 2;
+                rotate(a.begin() + f, a.begin() + mid, a.begin() + l + 1);
+                debug(a);
+                ++ind;
+            }
+            debug(a);
+            if(a[j] != b[j])
+            {
+                cout << "No"; return 0;
             }
         }
-        else if(help[i] > 1)
+    }
+    debug(a);
+    for(int i = 0; i < n; ++i)
+    {
+        if(a[i] != b[i])
         {
-            ++op;
-            auto f = st.find({-help[i], i});
-            help[i] = 0;
-            st.erase(f);
+            cout << "No"; return 0;
         }
     }
-    for(int i = 0; i < c; ++i){ 
-        assert(help[i] == 0);
-    }
-    cout << op;
+    cout << "Yes";
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    cin >> TET;
+    //cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

@@ -21,43 +21,39 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
+vector<ll> arr, price;
+vector<vector<ll>> dp;
+ll f(ll index, ll sum)
+{
+    if(index == 0)
+    {
+        return dp[index][sum] = price[index] * (sum / arr[index]);
+    }
+    if(dp[index][sum] != -1)
+    {
+        return dp[index][sum];
+    }
+    // Either take this one, or leave it
+    ll leave_it = f(index - 1, sum);
+    ll take_it = ((sum >= arr[index]) ? (price[index] + f(index - 1, sum - arr[index])) : (leave_it));
+    return dp[index][sum] = max(leave_it, take_it);
+}
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
+    ll n, m, c, d; cin >> n >> m >> c >> d;
+    price.push_back(d);
+    arr.push_back(c);
+    for (int i = 0; i < m; i++) {
+        ll A, B, C, D;
+        cin >> A >> B >> C >> D;
+        for(int j = 0; j < A / B; ++j)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
-            {
-                flag = false;
-                break;
-            }
+            arr.push_back(C);
+            price.push_back(D);
         }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    dp.assign(sz(arr), vector<ll>(n + 1, -1));
+    cout << f(sz(arr) - 1, n);
     return 0;
 }
 int32_t main() {

@@ -15,91 +15,16 @@ typedef long double ld;
 #define all(v) begin(v), end(v)
 #define ff first
 #define ss second
-#ifdef LOCAL
-#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
-#else
-#define debug(x)
-#endif
-
-inline ll nxt() { ll x; scanf("%lld", &x); return x; }
 
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(map<T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-void _print(int a) {cout << a;}
-void _print(ll a) {cout << a;}
-void _print(char a) {cout << a;}
-void _print(string a) {cout << a;}
-void _print(double a) {cout << a;}
+
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    vector<pair<int, int>> a(n);
-    for (int i = 0; i < n; i++) {
-        cin >> a[i].ff;
-        a[i].ss = i;
-    }
-    vector<pair<int, int>> b(n);
-    for (int i = 0; i < n; i++) {
-        cin >> b[i].ff;
-        b[i].ss = i;
-    }
-    auto f = [&](pair<int, int> a1, pair<int, int> b1) -> bool
-    {
-        return a1.ff > b1.ff;  
-    };
-    sort(a.begin(), a.end(), f);
-    sort(b.begin(), b.end(), f);
-    map<pair<int, int>, ll> left, right;
-    for (int i = 0; i < n; i++) {
-        left[a[i]] = i;
-    }
-    for (int i = 0; i < n; i++) {
-        right[b[i]] = i;
-    }
-    // min store max bnda
-    string res = string(n, '0');
-    // Let's work on second vector first
-    bool alpha = false;
-    for(int i = n - 1; i >= 0; --i)
-    {
-        if(alpha)
-        {
-            res[b[i].ss] = '1';
-        }
-        else
-        {
-            ll myindex = left[b[i]];
-            ll at_top = left[b[0]];
-            if(myindex <= at_top)
-            {
-                alpha = true;
-                res[b[i].ss] = '1';
-            }
-        }
-    }
-    alpha = false;
-    for(int i = n - 1; i >= 0; --i)
-    {
-        if(alpha) res[a[i].ss] = '1';
-        else
-        {
-            ll myindex = right[a[i]];
-            ll at_top = right[a[0]];
-            if(myindex <= at_top)
-            {
-                alpha = true;
-                res[a[i].ss] = '1';
-            }
-        }
-    }
-    cout << res;
+    //
     return 0;
 }
 int32_t main() {
@@ -121,5 +46,6 @@ int32_t main() {
 #ifdef LOCAL
     cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
 #endif
+    return 0;
 }
 // -> Keep It Simple Stupid!

@@ -24,40 +24,42 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
+    int n; cin >> n;
+    string s; cin >> s;
+    int mean = n / 3;
+    int z = count(all(s), '0'), o = count(all(s), '1'), t = n - z - o;
+    for(int i = 0; i < n && z < mean; ++i)
+    {
+        if(s[i] == '1' && o > mean)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
-            {
-                flag = false;
-                break;
-            }
+            s[i] = '0'; ++z;
+            --o;
         }
-        if(flag)
+        else if(s[i] == '2' && t > mean)
         {
-            ++cnt;
+            s[i] = '0'; ++z; --t;
         }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    for(int i = n - 1; i >= 0 && t < mean; --i)
+    {
+        if(s[i] == '0' && z > mean) s[i] = '2', ++t, --z;
+        else if(s[i] == '1' && o > mean) s[i] = '2', ++t, --o;
+    }
+    for(int i = 0; i < n && o < mean; ++i)
+    {
+        if(s[i] == '2' && t > mean)
+        {
+            s[i] = '1'; --t; ++o;
+        }
+    }
+    for(int i = n - 1; i >= 0 && o < mean; --i)
+    {
+        if(s[i] == '0' && z > mean)
+        {
+            s[i] = '1'; ++o; --z;
+        }
+    }
+    cout << s;
     return 0;
 }
 int32_t main() {

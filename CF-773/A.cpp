@@ -24,47 +24,36 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
-        {
-            if(v[i] == v[i - 1] + v[i - 2])
+    vector<pair<ll, ll>> v(3);
+    for (int i = 0; i < 3; i++) {
+        int a, b; cin >> a >> b;
+        v[i] = pair(a, b);
+    }
+    ll ans = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 3; j++) {
+            if(v[i].ss == v[j].ss)
             {
-                flag = false;
-                break;
+                set<int> st;
+                st.insert(0); st.insert(1);
+                st.insert(2);
+                st.erase(i); st.erase(j);
+                int ind = *st.begin();
+                if(v[ind].ss < v[i].ss)
+                {
+                    ans += abs(v[i].ff - v[j].ff);
+                }
             }
         }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    cout << ans;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

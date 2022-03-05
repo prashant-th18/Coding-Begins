@@ -24,40 +24,40 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
+    int n; cin >> n;
+    deque<int> dq;
+    for (int i = 0; i < n; i++) {
+        int t; cin >> t;
+        dq.push_back(t);
+    }
+    vector<int> ans;
+    for(int k = 1; k <= n; ++k)
+    {
+        vector<int> temp;
         bool flag = true;
-        for(int i = 2; i < n; ++i)
+        for(int i = 0; i < n; ++i)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
+            if(sz(temp) < k)
             {
-                flag = false;
-                break;
+                if(i == 0) temp.push_back(dq[i]);
+                else
+                temp.push_back(dq[i] - dq[i - 1]);
+            }
+            else
+            {
+               if(temp[i % k] != dq[i] - dq[i - 1])
+               {
+                   flag = false; break;
+               }
             }
         }
         if(flag)
         {
-            ++cnt;
+            ans.push_back(k);
         }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+    cout << sz(ans) << '\n';
+    for(auto val : ans) cout << val << ' ';
     return 0;
 }
 int32_t main() {

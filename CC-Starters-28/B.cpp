@@ -21,50 +21,66 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
-// *-> KISS*
-int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
+vector<vector<int>> v;
+vector<int> dist;
+void bfs(int n)
+{
+    // dijkstra
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, n});
+    dist[n] = 0;
+    while(!pq.empty())
+    {
+        auto f = pq.top();
+        int x = f.first;
+        int y = f.second;
+        pq.pop();
+        if(dist[y] != x)
         {
-            if(v[i] == v[i - 1] + v[i - 2])
+            continue;
+        }
+        for(const auto& val : v[y])
+        {
+            if(x < dist[val])
             {
-                flag = false;
-                break;
+                dist[val] = x;
+                pq.push({x, val});
             }
         }
-        if(flag)
+        if(y - 1 > 0)
         {
-            ++cnt;
+            if(x + 1 < dist[y - 1])
+            {
+                dist[y - 1] = x + 1;
+                pq.push({dist[y - 1], y - 1});
+            }
         }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
+        if(y + 1 < n && (x + 1 < dist[y + 1]))
         {
-            cout << val << ' ';
+            dist[y + 1] = x + 1;
+            pq.push({x + 1, y + 1});
         }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
     }
-    */
+}
+// *-> KISS*
+int solve() {
+    int n, m; cin >> n >> m;
+    v.assign(n + 1, vector<int>());
+    dist.assign(n + 1, INT_MAX);
+    for (int i = 0; i < m; i++) {
+        int a, b; cin >> a >> b;
+        v[a].push_back(b);
+        v[b].push_back(a);
+    }
+    bfs(n);
+    cout << dist[1];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

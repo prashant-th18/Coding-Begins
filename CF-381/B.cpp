@@ -24,41 +24,31 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
+    int n, m; cin >> n >> m;
     vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
-        {
-            if(v[i] == v[i - 1] + v[i - 2])
-            {
-                flag = false;
-                break;
-            }
-        }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
+    for (int &val : v) {
+        cin >> val;
     }
-    */
-    return 0;
+    priority_queue<int> pq;
+    for (int i = 0; i < m; i++) {
+        int a, b; cin >> a >> b;
+        int sum = 0;
+        for(int j = a - 1; j < b; ++j) sum += v[j];
+        pq.push(sum);
+    }
+    int maxx = 0;
+    while(sz(pq) != 0)
+    {
+        if(pq.top() > 0)
+        {
+            maxx += pq.top(); pq.pop();
+        }
+        else
+        {
+            break;
+        }
+    }
+    cout << maxx;
 }
 int32_t main() {
     ios::sync_with_stdio(0);

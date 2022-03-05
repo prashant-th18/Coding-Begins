@@ -24,40 +24,19 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n; int cnt = 0;
-    vector<int> v(n);
-    iota(all(v), 1);
-    do {
-        bool flag = true;
-        for(int i = 2; i < n; ++i)
-        {
-            if(v[i] == v[i - 1] + v[i - 2])
-            {
-                flag = false;
-                break;
-            }
-        }
-        if(flag)
-        {
-            ++cnt;
-        }
-        
-    } while (next_permutation(all(v)));
-    cout << cnt;
-    /*
-    vector<int> v(n);
-    iota(all(v), 1);
-    reverse(all(v));
-    for (int i = 0; i < n; i++) {
-        for(auto val : v)
-        {
-            cout << val << ' ';
-        }
-        cout << '\n';
-        if(i != n - 1)
-        swap(v[0], v[i + 1]);
+    ll n; cin >> n;
+    vector<ll> neg;
+    vector<ll> v(n);
+    for (ll &val : v) {
+        cin >> val;
     }
-    */
+    for (int i = 0; i < n; i++) {
+        if(v[i] < 0)
+        {
+            neg.push_back(i + 1);
+        }
+    }
+    vector<array<ll, 2>> dp
     return 0;
 }
 int32_t main() {

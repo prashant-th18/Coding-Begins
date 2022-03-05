@@ -1,91 +1,83 @@
-#ifdef LOCAL
-    #define _GLIBCXX_DEBUG
-#endif
-// #pragma GCC optimize("O3")
-// #pragma GCC target("popcnt")
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
-#define MOD 1000000007
-typedef long long ll;
-typedef long double ld;
-#define sz(s) ((int)s.size())
-#define all(v) begin(v), end(v)
-#define ff first
-#define ss second
-#ifdef LOCAL
-#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
-#else
-#define debug(x)
-#endif
-
-inline ll nxt() { ll _; cin >> _; return _; }
-
-// mt19937 rnd(239);
-mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
-
-#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
-// #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(map<T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-void _print(int a) {cout << a;}
-void _print(ll a) {cout << a;}
-void _print(char a) {cout << a;}
-void _print(string a) {cout << a;}
-void _print(double a) {cout << a;}
-// *-> KISS*
-int solve() {
-    int n = nxt();
-    string s; cin >> s;
-    unordered_map<char, ordered_set> mp;
-    // Do Everything in 1-Based
-    for (int i = 0; i < n; i++) {
-        mp[s[i]].insert(i + 1);
-    }
-    int q = nxt();
-    while(q--)
+int a[10][6];
+//[][0]-PID,[][1]- queue no., [][2]- burst time, [][3]- waiting time, [][4]-turn_around_time
+int main()
+{
+    cout << fixed << setprecision(2);
+    int n;
+    cout << "enter no of processes : ";
+    cin >> n;
+    int total_time = 0;
+    int m = 0;
+    cout << "enter queue no. - 0/1 (sjf preemptive/ fcfs) and burst time for the processes\n";
+    for (int i = 0; i < n; i++)
     {
-        int f = nxt();
-        if(f == 1)
+        cin >> a[i][1] >> a[i][2]; // queue, burst time
+        a[i][0] = i + 1;           // PID
+        cout << endl;
+        if (a[i][1] == 0)
+            m++; // number of processes in queue 1
+        total_time += a[i][2];
+    }
+    int remaining_t[n];
+    for (int i = 0; i < n; i++)
+    {
+        remaining_t[i] = a[i][2];
+    }
+    int complete = 0, min_time = INT_MAX, shortest = 0, completion_time = 0;
+    // bool check = false;
+    // queue 1 will be given priority over and processes in queue 1 will undergo sf=jf
+    // non preemptive scheduling
+    while (complete != m)
+    {
+        for (int j = 0; j < n; j++)
         {
-            int l = nxt(), r = nxt();
-            char ch; cin >> ch;
-            const auto& myset = mp[ch];
-            cout << myset.order_of_key(r + 1) - myset.order_of_key(l) << '\n';
+            if ((remaining_t[j] < min_time) && remaining_t[j] > 0 && !a[j][1])
+            {
+                min_time = remaining_t[j];
+                shortest = j;
+            }
         }
-        else
+        remaining_t[shortest] = 0;
+        min_time = 0;
+        // when the process gets completely executed
+        if (min_time == 0)
         {
-            int in = nxt();
-          char ch; cin >> ch;
-            char del = s[in - 1];
-            mp[del].erase(in);
-            mp[ch].insert(in);
+            min_time = INT_MAX;
+            complete++;
+            completion_time += a[shortest][2];
+            a[shortest][4] = completion_time; // completion time
+            a[shortest][3] = completion_time - a[shortest][2];
+            // waiting time = completion time - burst time - arrival time( arrival timeis 0 for all processes)
+            if (a[shortest][3] < 0)
+                a[shortest][3] = 0;
         }
     }
-    return 0;
-}
-int32_t main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    int TET = 1;
-    //cin >> TET;
-    cout << fixed << setprecision(6);
-    for (int i = 1; i <= TET; i++) {
-#ifdef LOCAL
-        cout << "##################" << '\n';
-#endif
-        if (solve())
+    // Now remaining processes of queue 2 will be done according to fcfs
+    for (int i = 0; i < n; i++)
+    {
+        if (a[i][1])
         {
-            break;
+            a[i][3] = completion_time;
+            a[i][4] = a[i][3] + a[i][2];
+            completion_time += a[i][2];
         }
-        cout << '\n';
     }
-#ifdef LOCAL
-    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-#endif
+    int total_turnaround = 0, total_waiting = 0;
+    for (int i = 0; i < n; i++)
+    {
+        total_waiting += a[i][3];
+        total_turnaround += a[i][4];
+    }
+    cout << "Process Id\tBurst time\tTurnaround time\tWaiting time\n";
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i][0] << "\t\t" << a[i][2] << "\t\t" << a[i][4] << "\t\t" << a[i][3] << "\n";
+    }
+    cout << "\t\t\t\t"
+         << "Avg TAT " << float(total_turnaround) / float(n) << "\t\t"
+         << "Avg WT "<<float(total_waiting)/float(n)<<"\n ";
+        cout
+         << "Throughput = " << float(n * 100) / total_time;
 }
-// -> Keep It Simple Stupid!
