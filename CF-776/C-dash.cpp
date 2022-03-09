@@ -21,51 +21,42 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
+struct edge {
+    ll a, b, c;
+};
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    deque<ll> dq, index;
-    vector<ll> v(n);
-    for (ll &val : v) {
-        cin >> val;
+    ll n, m; cin >> n >> m;
+    deque<edge> dq;
+    for (int i = 0; i < m; i++) {
+        ll x, w; cin >> x >> w;
+        dq.push_back({w, x, i + 1});
     }
-    ll ans {};
-    for(int i = n - 1; i >= 0; --i)
+    sort(dq.begin(), dq.end(), [&](const edge& aa, const edge& bb) {
+        return make_tuple(aa.a, aa.b, aa.c) < make_tuple(bb.a, bb.b, bb.c);
+    });
+    ll sum = 0;
+    deque<pair<ll, ll>> v;
+    for (int i = 0; i < 2 * n; i++) {
+        sum += dq.front().a;
+        v.push_back(pair(dq.front().b, dq.front().c));
+        dq.pop_front();
+    }
+    sort(v.begin(), v.end());
+    cout << sum << '\n';
+    while(sz(v) != 0)
     {
-        if(v[i] < 0)
-        {
-            ll res = 0;
-            if(sz(dq) == 0)
-            {
-                res += (n - i);
-            }
-            else if(sz(dq) >= 1)
-            {
-                res += (index.front() - i);
-                if(sz(dq) > 1)
-                {
-                   res += dq[1]; 
-                }
-            }
-            index.push_front(i);
-            dq.push_front(res);
-        }
-        else if(sz(dq) != 0)
-        {
-            ans += dq.front();
-        }
+        cout << v.front().ss << ' ' << v.back().ss << '\n';
+        v.pop_front();
+        v.pop_back();
     }
-    ll neg = ans + accumulate(all(dq), 0LL);
-    ll pos = (n * (n + 1) >> 1) - neg;
-    cout << neg << ' ' << pos;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL
@@ -83,3 +74,4 @@ int32_t main() {
     return 0;
 }
 // -> Keep It Simple Stupid!
+

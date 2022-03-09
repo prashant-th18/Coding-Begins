@@ -24,41 +24,67 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    deque<ll> dq, index;
-    vector<ll> v(n);
-    for (ll &val : v) {
-        cin >> val;
+    int n; cin >> n;
+    map<int, vector<int>> mp;
+    for (int i = 0; i < n; i++) {
+        int t; cin >> t;
+        mp[t].push_back(i);
     }
-    ll ans {};
-    for(int i = n - 1; i >= 0; --i)
+    vector<vector<int>> v;
+    for(auto val : mp)
+        v.push_back(val.ss);
+    sort(v.begin(), v.end(), [&](vector<int> a, vector<int> b) {
+        return sz(a) < sz(b);
+            });
+    int a = 0, b = 0;
+    /*auto f = [&]() -> void
     {
-        if(v[i] < 0)
+        if(a < b)  
+    };*/
+    string s = string(n, '.');
+    for (int i = 0; i < sz(v); i++) {
+        if(sz(v[i]) == 1)
         {
-            ll res = 0;
-            if(sz(dq) == 0)
+            if(a <= b)
             {
-                res += (n - i);
+                ++a, s[v[i][0]] = 'A';
             }
-            else if(sz(dq) >= 1)
+            else if(b < a)
             {
-                res += (index.front() - i);
-                if(sz(dq) > 1)
-                {
-                   res += dq[1]; 
-                }
+                ++b, s[v[i][0]] = 'B';
             }
-            index.push_front(i);
-            dq.push_front(res);
         }
-        else if(sz(dq) != 0)
+        else if(sz(v[i]) == 2)
         {
-            ans += dq.front();
+            s[v[i][0]] = s[v[i][1]] = 'A';
+        }
+        else
+        {
+            if(a < b)
+            {
+                ++a;
+                s[v[i][0]] = 'A';
+                for(int j = 1; j < sz(v[i]); ++j) s[v[i][j]] = 'B';
+            }
+            else if(b < a)
+            {
+                s[v[i][0]] = 'B';
+                ++b;
+                for(int j = 1; j < sz(v[i]); ++j) s[v[i][j]] = 'A';
+            }
+            else 
+            {
+                for(int j = 0; j < sz(v[i]); ++j) s[v[i][j]] = 'A';
+            }
         }
     }
-    ll neg = ans + accumulate(all(dq), 0LL);
-    ll pos = (n * (n + 1) >> 1) - neg;
-    cout << neg << ' ' << pos;
+    if(a != b)
+    {
+        cout << "NO";
+        return 0;
+    }
+    cout << "YES\n";
+    cout << s;
     return 0;
 }
 int32_t main() {

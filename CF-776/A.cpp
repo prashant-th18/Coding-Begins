@@ -24,48 +24,23 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    deque<ll> dq, index;
-    vector<ll> v(n);
-    for (ll &val : v) {
-        cin >> val;
-    }
-    ll ans {};
-    for(int i = n - 1; i >= 0; --i)
+    string s; cin >> s;
+    char ch; cin >> ch;
+    for(int i = 0; i < sz(s); ++i)
     {
-        if(v[i] < 0)
+        if(s[i] == ch && i % 2 == 0)
         {
-            ll res = 0;
-            if(sz(dq) == 0)
-            {
-                res += (n - i);
-            }
-            else if(sz(dq) >= 1)
-            {
-                res += (index.front() - i);
-                if(sz(dq) > 1)
-                {
-                   res += dq[1]; 
-                }
-            }
-            index.push_front(i);
-            dq.push_front(res);
-        }
-        else if(sz(dq) != 0)
-        {
-            ans += dq.front();
+            cout << "Yes"; return 0;
         }
     }
-    ll neg = ans + accumulate(all(dq), 0LL);
-    ll pos = (n * (n + 1) >> 1) - neg;
-    cout << neg << ' ' << pos;
+    cout << "No";
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

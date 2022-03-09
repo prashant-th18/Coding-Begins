@@ -51,8 +51,9 @@ int main()
     return 0;
 }
 /*
- * You can improve the performance a little bit more if you don't store pairs in the containers,
- * but only the vertex indices. In this case we must overload the comparison operator: it must compare two vertices using the distances stored in .
+You can improve the performance a little bit more if you don't store pairs in the containers,
+but only the vertex indices. In this case we must overload the comparison operator: 
+it must compare two vertices using the distances stored in.
 
 As a result of the relaxation, the distance of some vertices will change. 
 However the data structure will not resort itself automatically. 

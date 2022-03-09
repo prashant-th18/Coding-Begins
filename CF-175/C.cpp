@@ -25,40 +25,20 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     ll n; cin >> n;
-    deque<ll> dq, index;
-    vector<ll> v(n);
-    for (ll &val : v) {
-        cin >> val;
+    ll ans = 0;
+    priority_queue<ll> pq;
+    for (int i = 0; i < n; i++) {
+        ll t; cin >> t;
+        pq.push(t);
     }
-    ll ans {};
-    for(int i = n - 1; i >= 0; --i)
+    while(n > 0)
     {
-        if(v[i] < 0)
-        {
-            ll res = 0;
-            if(sz(dq) == 0)
-            {
-                res += (n - i);
-            }
-            else if(sz(dq) >= 1)
-            {
-                res += (index.front() - i);
-                if(sz(dq) > 1)
-                {
-                   res += dq[1]; 
-                }
-            }
-            index.push_front(i);
-            dq.push_front(res);
-        }
-        else if(sz(dq) != 0)
-        {
-            ans += dq.front();
-        }
+        ll t = pq.top();
+        ans += abs(n - t);
+        pq.pop();
+        --n;
     }
-    ll neg = ans + accumulate(all(dq), 0LL);
-    ll pos = (n * (n + 1) >> 1) - neg;
-    cout << neg << ' ' << pos;
+    cout << ans;
     return 0;
 }
 int32_t main() {
