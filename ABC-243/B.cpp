@@ -25,25 +25,37 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    ll maxx = -1, sum {};
+    vector<int> a(n), b(n);
     for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
+        cin >> a[i];
     }
-    if(maxx == 0)
-    {
-        cout << 0; return 0;
+    for (int i = 0; i < n; i++) {
+        cin >> b[i];
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    map<int, int> mp;
+    int cnt = 0;
+    for (int i = 0; i < n; i++) {
+        if(a[i] == b[i])
+        {
+            ++cnt;
+        }
+        else
+        {
+            ++mp[a[i]];
+            ++mp[b[i]];
+        }
+    }
+    cout << cnt << ' ';
+    cnt = 0;
+    for(auto val : mp) if(val.ss > 1) ++cnt;
+    cout << cnt;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    cin >> TET;
+    //cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

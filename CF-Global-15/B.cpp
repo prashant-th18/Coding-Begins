@@ -25,18 +25,50 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    ll maxx = -1, sum {};
+    vector<vector<int>> v(n);
     for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
+        vector<int> temp(5);
+        for (int j = 0; j < 5; j++) {
+            cin >> temp[j];
+        }
+        v[i] = temp;
     }
-    if(maxx == 0)
+    vector<int> players(n);
+    iota(all(players), 0);
+    auto f = [&](int a, int b) -> bool
     {
-        cout << 0; return 0;
+          int pa, pb; pa = pb = {};
+          for(int j = 0; j < 5; ++j)
+          {
+              if(v[a][j] < v[b][j]) ++pa;
+              else if(v[b][j] < v[a][j]) ++pb;
+          }
+          return pa > pb;
+    };
+    sort(players.begin(), players.end(), f);
+    auto check = [&]()
+    {
+        int ind = players[0];
+        int cnt = 0;
+        for(int i = 1; i < n; ++i)
+        {
+            int c {};
+            for(int j = 0; j < 5; ++j)
+            {
+                if(v[ind][j] < v[players[i]][j]) ++c;
+            }
+            cnt += (c >= 3);
+        }
+        return cnt == n - 1;
+    };
+    if(n == 1) cout << 1;
+    else
+    {
+        if(check())
+        cout << players[0] + 1;
+        else 
+        cout << -1;
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
     return 0;
 }
 int32_t main() {

@@ -8,7 +8,7 @@
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
 using namespace std;
-#define MOD 1000000007
+#define MOD 998244353
 typedef long long ll;
 typedef long double ld;
 #define sz(s) ((int)s.size())
@@ -21,22 +21,36 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
+ll binexp(ll base, ll power)
+{
+    ll res = 1;
+    while(power)
+    {
+        if(power & 1) res = res * base % MOD;
+        power >>= 1;
+        base = base * base % MOD;
+    }
+    return res;
+}
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    ll maxx = -1, sum {};
-    for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
-    }
-    if(maxx == 0)
+    string s; cin >> s;
+    vector<ll> dp(sz(s) + 1, 0);
+    for(int i = 0; i <= n - 1; ++i)
     {
-        cout << 0; return 0;
+        dp[i + 1] = dp[i] + (i + 1) * (s[i] - '0');
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    ll ans = 0;
+    for (int i = 0; i < n; i++) {
+        ll temp = 0;
+        if(dp[n - i] & 1)
+        {
+            temp = binexp(2, i);
+        }
+        ans = (ans + temp) % MOD;
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {

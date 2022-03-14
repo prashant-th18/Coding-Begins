@@ -21,22 +21,43 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
+struct edge {
+    int p, flag, index;
+    bool operator<(const edge& other) const
+    {
+        return make_tuple(p, flag, index) < make_tuple(other.p, other.flag, other.index);
+    }
+};
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    ll maxx = -1, sum {};
+    set<edge> st;
+    vector<int> ind(n);
     for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
+        int l, r; cin >> l >> r;
+        st.insert({l, -1, i});
+        st.insert({r, 1, i});
     }
-    if(maxx == 0)
+    int how {}, cnt {};
+    for(const auto& [x, y, z] : st)
     {
-        cout << 0; return 0;
+        if(y == -1)
+        {
+            ++how;
+            ind[z] = cnt % 2;
+        }
+        else
+        {
+            --how;
+            if(how == 0) ++cnt;
+        }
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    int c = count(all(ind), 0);
+    if(c == 0 || c == n) cout << -1;
+    else
+    {
+        for(auto val : ind) cout << val + 1 << ' ';
+    }
     return 0;
 }
 int32_t main() {

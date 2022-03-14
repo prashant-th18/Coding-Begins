@@ -24,19 +24,49 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    ll maxx = -1, sum {};
-    for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
+    ll n; cin >> n;
+    vector<ll> a(n);
+    for (ll &val : a) {
+        cin >> val;
     }
-    if(maxx == 0)
+    vector<ll> b(n);
+    for (ll &val : b) {
+        cin >> val;
+    }
+    auto bestCandidate = [&](vector<ll>& v, ll num) -> ll
     {
-        cout << 0; return 0;
+        ll diff = abs(v[0] - num), index = 0;
+        for(int i = 1; i < n; ++i)
+        {
+            ll d = abs(v[i] - num);
+            if(d < diff)
+            {
+                diff = d;
+                index = i;
+            }
+        }
+        return index;
+    };
+    vector<ll> forf = {0, bestCandidate(b, a[0]), n - 1};
+    vector<ll> forl = {0, bestCandidate(b, a[n - 1]), n - 1};
+    ll mini = 1e12;
+    for(int i = 0; i < 3; ++i)
+    {
+        for(int j = 0; j < 3; ++j)
+        {
+            ll ans = abs(a[0] - b[forf[i]]) + abs(a[n - 1] - b[forl[j]]);
+            if(i > 0 && j > 0)
+            {
+                ans += abs(b[0] - a[bestCandidate(a, b[0])]);
+            }
+            if(i < 2 && j < 2)
+            {
+                ans += abs(b[n - 1] - a[bestCandidate(a, b[n - 1])]);
+            }
+            mini = min(mini, ans);
+        }
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    cout << mini;
     return 0;
 }
 int32_t main() {

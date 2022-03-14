@@ -24,19 +24,24 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    ll maxx = -1, sum {};
-    for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
-    }
-    if(maxx == 0)
+    string s; cin >> s;
+    int n = sz(s);
+    char a = s[0], b = s[n - 1];
+    int cnt = 0, ans = 0;
+    for(int i = 0; i < n; ++i)
     {
-        cout << 0; return 0;
+        if(s[i] == a || s[i] == b)
+        {
+            ans = max(ans, cnt);
+            cnt = 0;
+        }
+        else
+        {
+            ++cnt;
+        }
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    ans = max(ans, cnt);
+    cout << ((ans == 0) ? (-1) : (ans));
     return 0;
 }
 int32_t main() {

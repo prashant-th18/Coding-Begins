@@ -22,28 +22,49 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
+string make(int i)
+{
+    string res = "";
+    while(i)
+    {
+        if(i & 1) res += "1";
+        else res += "0";
+        i >>= 1;
+    }
+    reverse(all(res));
+    return res;
+}
+int bin(string s)
+{
+    int i = sz(s) - 1;
+    int res = 0;
+    while(i >= 0)
+    {
+        res += (1 << (sz(s) - 1 - i)) * (s[i] - '0');
+        --i;
+    }
+    return res;
+}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    ll maxx = -1, sum {};
-    for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
-    }
-    if(maxx == 0)
+    // Case Work
+    vector<string> v;
+    for(int i = 1; i <= (1 << 5) - 1; ++i)
     {
-        cout << 0; return 0;
+        v.push_back(make(i));
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    sort(v.begin(), v.end());
+    for(int i = 0; i < sz(v); ++i)
+    {
+        cout << __builtin_popcount(bin(v[i])) << ' ';
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    cin >> TET;
+    //cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

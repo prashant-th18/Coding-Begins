@@ -25,18 +25,32 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    ll maxx = -1, sum {};
-    for (int i = 0; i < n; i++) {
-        ll t; cin >> t;
-        maxx = max(maxx, t);
-        sum += t;
-    }
-    if(maxx == 0)
+    string s; cin >> s;
+    ll ans = 0;
+    stack<char> st;
+    st.push(s[0]);
+    for(int i = 1; i < n; ++i)
     {
-        cout << 0; return 0;
+        if(st.empty())
+        {
+            st.push(s[i]);
+        }
+        else
+        {
+            if(st.top() == s[i])
+            {
+                ++ans;
+                st.pop();
+            }
+            else
+            {
+                st.pop(); ++ans;
+                st.push(s[i]);
+            }
+        }
     }
-    if(2 * maxx <= sum) cout << 1;
-    else cout << 2 * maxx - sum;
+    if(st.empty() == false) ++ans;
+    cout << ans;
     return 0;
 }
 int32_t main() {
