@@ -15,58 +15,23 @@ typedef long double ld;
 #define all(v) begin(v), end(v)
 #define ff first
 #define ss second
-#ifdef LOCAL
-#define debug(x) cout << '\n' << "----------------" << '\n' << #x << " : "; _print(x); cout << '\n' << "-------------" << '\n';
-#else
-#define debug(x)
-#endif
 
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-template <typename T> void _print(vector <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(vector <T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-template <typename T> void _print(set <T> v) { cout << "[ "; for (auto myval : v) cout << myval << " "; cout << "]"; }
-template <typename T1, typename T2> void _print(map<T1, T2> v) { cout << "[ "; for (auto myval : v) cout << myval.ff << ' ' << myval.ss << " "; cout << "]"; }
-void _print(int a) {cout << a;}
-void _print(ll a) {cout << a;}
-void _print(char a) {cout << a;}
-void _print(string a) {cout << a;}
-void _print(double a) {cout << a;}
+
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    ll t = 1;
-    vector<ll> v;
-    ll rem = k;
-    while(rem > 0)
-    {
-        if(n & 1)
-        {
-            --n; --rem; v.push_back(t);
-            if(rem == 0) break;
-        }
-        if(n / 2 >= rem)
-        {
-            n /= 2; t++;
-        }
-        else
-        {
-            // 2 * rem - n -> t
-            // left -> t * 2
-            ll q = 2 * rem - n;
-            for (int i = 0; i < q; i++) {
-                v.push_back(t);
-            }
-            for (int i = 0; i < max(0LL, rem - q); i++) {
-                v.push_back(2LL * t);
-            }
-            rem = 0;
-        }
+    ll n, k; cin >> n >> k;
+    for (int i = 0; i < k - 3; i++) {
+        cout << 1 << ' ';
     }
-    for(auto val : v) cout << val << ' ';
+    n -= (k - 3);
+    if(n % 2 == 1) cout << 1 << ' ' << n / 2 << ' ' << n / 2;
+    else if(n % 4 == 0) cout << n / 2 << ' ' << n / 4 << ' ' << n / 4;
+    else cout << 2 << ' ' << n / 2 - 1 << ' ' << n / 2 - 1;
     return 0;
 }
 int32_t main() {
@@ -88,5 +53,6 @@ int32_t main() {
 #ifdef LOCAL
     cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
 #endif
+    return 0;
 }
 // -> Keep It Simple Stupid!
