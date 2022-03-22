@@ -22,48 +22,19 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
-ll mul(ll a, ll b)
-{
-    return a % MOD * (b % MOD) % MOD;
-}
-ll sub(ll a, ll b)
-{
-    a %= MOD; b %= MOD;
-    return (a - b + MOD) % MOD;
-}
-ll add(ll a, ll b)
-{
-    a %= MOD;
-    b %= MOD;
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    // https://codeforces.com/contest/1422/problem/C => BUT in place of "Substring", it may work for "Subsequence"
-    string s; cin >> s;
-    ll ans = 0;
-    int n = sz(s);
-    for(ll i = 0; i < n; ++i)
+    ll a, b; cin >> a >> b;
+    ll ans = -1000;
+    for(ll j = b, cnt {}; j > a && cnt < 25; ++cnt, --j)
     {
-        ll outer = (s[i] - '0');
-        ll t = n - 1 - i;
-        ll p = binexp(11LL, t), two = (1LL << i), ten = binexp(10LL, t);
-        p = mul(p, two);
-        p = sub(p, ten);
-        outer = mul(outer, p);
-        ans = add(ans, outer);
+        for(ll i = a, c{}; i < b && c < 25; ++c, ++i)
+        {
+            if(__gcd(i, j) == 1)
+            {
+                ans = max(ans, j - i); break;
+            }
+        }
     }
     cout << ans;
     return 0;

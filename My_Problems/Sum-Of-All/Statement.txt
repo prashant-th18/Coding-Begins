@@ -3,11 +3,11 @@ Since you like Maths Problems a lot, your friend need a help in the following pr
 You are given a number. You want to compute the sum of all possible resulting numbers after applying the
 `magic operation`.
 
-In a magic operation, you select a non-empty subsegment from this number, then you remove these digits from
+In a magic operation, you select a non-empty subsequence from this number, then you remove these digits from
 the number, then the remaining digits close the gap, and the resulting integer is the number after magic
 operation.
 
-For eg: Suppose number is *12345*, we select the subsegment *24*, then after removing these digits, the
+For eg: Suppose number is *12345*, we select the subsequence *24*, then after removing these digits, the
 number is *135*.
 
 It is allowed for resulting number to contain leading zeros. If we removes all digits, the number is considered to be 0.

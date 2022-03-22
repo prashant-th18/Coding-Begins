@@ -22,50 +22,50 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
-ll mul(ll a, ll b)
-{
-    return a % MOD * (b % MOD) % MOD;
-}
-ll sub(ll a, ll b)
-{
-    a %= MOD; b %= MOD;
-    return (a - b + MOD) % MOD;
-}
-ll add(ll a, ll b)
-{
-    a %= MOD;
-    b %= MOD;
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    // https://codeforces.com/contest/1422/problem/C => BUT in place of "Substring", it may work for "Subsequence"
-    string s; cin >> s;
-    ll ans = 0;
-    int n = sz(s);
-    for(ll i = 0; i < n; ++i)
+    string a = string(3, '.');
+    cin >> a[0] >> a[1] >> a[2];
+    string b = string(3, '.');
+    cin >> b[0] >> b[1] >> b[2];
+    auto cc = [&](char ch)
     {
-        ll outer = (s[i] - '0');
-        ll t = n - 1 - i;
-        ll p = binexp(11LL, t), two = (1LL << i), ten = binexp(10LL, t);
-        p = mul(p, two);
-        p = sub(p, ten);
-        outer = mul(outer, p);
-        ans = add(ans, outer);
+        return count(all(a), ch) == count(all(b), ch);  
+    };
+    if(!(cc('R') && cc('G') && cc('B')))
+    {
+        cout << "No"; return 0;
     }
-    cout << ans;
+    if(a == b)
+    {
+        cout << "Yes";
+    }
+    else
+    {
+        vector<int> v;
+        for (int i = 0; i < 3; i++) {
+            if(a[i] != b[i]) v.push_back(i);
+        }
+        if(sz(v) == 3)
+        {
+            cout << "Yes";
+        }
+        else if(sz(v) == 2)
+        {
+            int which = 1;
+            for (int i = 1; i < 4; i++) {
+                if(find(all(v), i) == v.end())
+                {
+                    which = i; break;
+                }
+            }
+            if(b[v[0]] == b[which] || b[v[1]] == b[which])
+            {
+                cout << "Yes";
+            }
+            else cout << "No";
+        }
+    }
     return 0;
 }
 int32_t main() {

@@ -22,57 +22,58 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
-ll mul(ll a, ll b)
-{
-    return a % MOD * (b % MOD) % MOD;
-}
-ll sub(ll a, ll b)
-{
-    a %= MOD; b %= MOD;
-    return (a - b + MOD) % MOD;
-}
-ll add(ll a, ll b)
-{
-    a %= MOD;
-    b %= MOD;
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    // https://codeforces.com/contest/1422/problem/C => BUT in place of "Substring", it may work for "Subsequence"
-    string s; cin >> s;
-    ll ans = 0;
-    int n = sz(s);
-    for(ll i = 0; i < n; ++i)
-    {
-        ll outer = (s[i] - '0');
-        ll t = n - 1 - i;
-        ll p = binexp(11LL, t), two = (1LL << i), ten = binexp(10LL, t);
-        p = mul(p, two);
-        p = sub(p, ten);
-        outer = mul(outer, p);
-        ans = add(ans, outer);
+    int n, m; cin >> n >> m;
+    vector<vector<char>> v(n, vector<char>(m, '0'));
+    auto ans = v;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> v[i][j];
+        }
     }
-    cout << ans;
+    vector<vector<int>> fans;
+    for(int j = m - 1; j >= 1; --j)
+    {
+        for(int i = n - 1; i >= 0; --i)
+        {
+            // need 1?
+            if(v[i][j] == '1')
+            {
+                vector<int> temp;
+                temp.push_back(i + 1);
+                temp.push_back(j);
+                temp.push_back(i + 1); temp.push_back(j + 1);
+                fans.push_back(temp);
+                ans[i][j - 1] = '0'; ans[i][j] = '1';
+            }
+        }
+    }
+    for(int i = n - 1; i >= 1; --i)
+    {
+        if(v[i][0] == '0') continue;
+        vector<int> temp;
+        temp.push_back(i); temp.push_back(1); temp.push_back(i + 1); temp.push_back(1);
+        fans.push_back(temp);
+        ans[i][0] = '1';
+    }
+    if(ans == v)
+    {
+        cout << sz(fans) << '\n';
+        for(int i = 0; i < sz(fans); ++i)
+        {
+            for(auto val : fans[i]) cout << val << ' ';
+            cout << '\n';
+        }
+    }
+    else cout << -1;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

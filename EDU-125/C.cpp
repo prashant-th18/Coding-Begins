@@ -22,57 +22,60 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
-ll mul(ll a, ll b)
-{
-    return a % MOD * (b % MOD) % MOD;
-}
-ll sub(ll a, ll b)
-{
-    a %= MOD; b %= MOD;
-    return (a - b + MOD) % MOD;
-}
-ll add(ll a, ll b)
-{
-    a %= MOD;
-    b %= MOD;
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    // https://codeforces.com/contest/1422/problem/C => BUT in place of "Substring", it may work for "Subsequence"
-    string s; cin >> s;
-    ll ans = 0;
-    int n = sz(s);
-    for(ll i = 0; i < n; ++i)
-    {
-        ll outer = (s[i] - '0');
-        ll t = n - 1 - i;
-        ll p = binexp(11LL, t), two = (1LL << i), ten = binexp(10LL, t);
-        p = mul(p, two);
-        p = sub(p, ten);
-        outer = mul(outer, p);
-        ans = add(ans, outer);
+    int n; cin >> n;
+    deque<char> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
     }
-    cout << ans;
+    auto check = [&](int index = 0) 
+    {
+        string res = "";
+        res += v[index];
+        res += v[index + 1];
+        if(res == "((" || res == "()" || res == "))") return true;
+        return false;
+    };
+    int op = 0;
+    while(sz(v) >= 2)
+    {
+        if(check())
+        {
+            ++op;
+            v.pop_front(); v.pop_front();
+        }
+        else
+        {
+            // check till we get ")"
+            int index = -1;
+            for(int i = 2; i < sz(v); ++i)
+            {
+                if(v[i] == ')')
+                {
+                    index = i; break;
+                }
+            }
+            if(index == -1) break;
+            else
+            {
+                while(index >= 0)
+                {
+                    v.pop_front();
+                    --index;
+                }
+                ++op;
+            }
+        }
+    }
+    cout << op << ' ' << sz(v);
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

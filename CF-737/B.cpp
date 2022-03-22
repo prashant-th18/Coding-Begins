@@ -25,19 +25,21 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n, k; cin >> n >> k;
+    map<int, int> mp;
     vector<int> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
+    for(int i = 0; i < n; ++i) { 
+        cin >> v[i]; 
+        mp[v[i]] = i;
     }
-    int how = 1;
-    for(int i = 1; i < n; ++i)
+    auto s = v; sort(s.begin(), s.end());
+    int i = 0, cnt {};
+    while(i < n)
     {
-        if(v[i] < v[i - 1])
-        {
-            ++how;
-        }
+        int j = mp[s[i]];
+        while(j < n && i < n && (v[j] == s[i])) ++i, ++j;
+        ++cnt;
     }
-    if(how <= k) cout << "Yes";
+    if(cnt <= k) cout << "Yes";
     else cout << "No";
     return 0;
 }
