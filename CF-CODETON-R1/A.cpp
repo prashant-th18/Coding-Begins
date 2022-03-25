@@ -22,74 +22,36 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-vector<vector<int>> v;
-vector<int> vis;
-queue<int> dq;
-void dfs(int node, int ti)
-{
-    if(ti >= 1)
-    {
-        vis[node] = 2;
-    }
-    else
-    {
-        vis[node] = 1;
-        dq.push(node);
-        return;
-    }
-    for(const auto& val : v[node])
-    {
-        if(vis[val] == 0)
-        {
-            dfs(val, ti - 1);
-        }
-    }
-}
 // *-> KISS*
 int solve() {
-    dq = queue<int>();
-    int n, m, q; cin >> n >> m >> q;
-    v.assign(n + 1, vector<int>());
-    vis.assign(n + 1, 0);
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        v[a].push_back(b);
-        v[b].push_back(a);
+    int n; cin >> n;
+    vector<int> v(n);
+    for(int i = 0; i < n; ++i) { 
+        cin >> v[i]; 
     }
-    ll ti = 0;
-    while(q--)
+    int mini = 1e9 + 1, mind = -1;
+    int maxi = -1e9 - 1, maxd = -1;
+    for(int i = 0; i < n; ++i)
     {
-        int query, x; cin >> query >> x;
-        if(query == 1)
+        if(v[i] < mini)
         {
-            dq.push(x);
+            mini = v[i];
+            mind = i;
         }
-        else if(query == 3)
+        if(v[i] > maxi)
         {
-            queue<int> qq = dq;
-            dq = queue<int>();
-            while(!qq.empty())
-            {
-                dfs(qq.front(), ti);
-                qq.pop();
-            }
-            if(vis[x] == 0) cout << "No";
-            else cout << "Yes";
-            cout << '\n';
-            ti = 0;
-        }
-        else
-        {
-            ti += x;
+            maxi = v[i];
+            maxd = i;
         }
     }
+    cout << mind + 1 << ' ' << maxd + 1 << '\n';
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

@@ -22,65 +22,32 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-vector<vector<int>> v;
-vector<int> vis;
-queue<int> dq;
-void dfs(int node, int ti)
-{
-    if(ti >= 1)
-    {
-        vis[node] = 2;
-    }
-    else
-    {
-        vis[node] = 1;
-        dq.push(node);
-        return;
-    }
-    for(const auto& val : v[node])
-    {
-        if(vis[val] == 0)
-        {
-            dfs(val, ti - 1);
-        }
-    }
-}
 // *-> KISS*
 int solve() {
-    dq = queue<int>();
-    int n, m, q; cin >> n >> m >> q;
-    v.assign(n + 1, vector<int>());
-    vis.assign(n + 1, 0);
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        v[a].push_back(b);
-        v[b].push_back(a);
+    int n; cin >> n;
+    vector<int> v(n);
+    for(int i = 0; i < n; ++i) { 
+        cin >> v[i]; 
     }
-    ll ti = 0;
-    while(q--)
-    {
-        int query, x; cin >> query >> x;
-        if(query == 1)
+    multiset<int> st;
+    for (int i = 0; i < n; i++) {
+        int tt; cin >> tt;
+        st.insert(tt);
+    }
+
+    for (int i = 0; i < n; i++) {
+        if(v[i] == 0)
         {
-            dq.push(x);
-        }
-        else if(query == 3)
-        {
-            queue<int> qq = dq;
-            dq = queue<int>();
-            while(!qq.empty())
-            {
-                dfs(qq.front(), ti);
-                qq.pop();
-            }
-            if(vis[x] == 0) cout << "No";
-            else cout << "Yes";
-            cout << '\n';
-            ti = 0;
+            auto it = st.lower_bound(v[i]);
+            cout << *it << ' ';
+            st.erase(it);
         }
         else
         {
-            ti += x;
+            auto it = st.lower_bound(n - v[i]);
+            if(it == st.end()) it = st.begin();
+            cout << (*it + v[i]) % n << ' ';
+            st.erase(it);
         }
     }
     return 0;

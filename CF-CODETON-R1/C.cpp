@@ -22,66 +22,36 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-vector<vector<int>> v;
-vector<int> vis;
-queue<int> dq;
-void dfs(int node, int ti)
-{
-    if(ti >= 1)
+// *-> KISS*
+int solve() {
+    int n; cin >> n;
+    bool one = false, zero = false;
+    vector<int> v(n);
+    for(int i = 0; i < n; ++i) { 
+        cin >> v[i]; 
+        one |= (v[i] == 1);
+        zero |= (v[i] == 0);
+    }
+    if(zero)
     {
-        vis[node] = 2;
+        if(one) cout << "No";
+        else cout << "Yes";
+    }
+    else if(one)
+    {
+        sort(v.begin(), v.end());
+        for(int i = 0; i < n - 1; ++i)
+        {
+            if(v[i + 1] - v[i] == 1)
+            {
+                cout << "No"; return 0;
+            }
+        }
+        cout << "Yes";
     }
     else
     {
-        vis[node] = 1;
-        dq.push(node);
-        return;
-    }
-    for(const auto& val : v[node])
-    {
-        if(vis[val] == 0)
-        {
-            dfs(val, ti - 1);
-        }
-    }
-}
-// *-> KISS*
-int solve() {
-    dq = queue<int>();
-    int n, m, q; cin >> n >> m >> q;
-    v.assign(n + 1, vector<int>());
-    vis.assign(n + 1, 0);
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        v[a].push_back(b);
-        v[b].push_back(a);
-    }
-    ll ti = 0;
-    while(q--)
-    {
-        int query, x; cin >> query >> x;
-        if(query == 1)
-        {
-            dq.push(x);
-        }
-        else if(query == 3)
-        {
-            queue<int> qq = dq;
-            dq = queue<int>();
-            while(!qq.empty())
-            {
-                dfs(qq.front(), ti);
-                qq.pop();
-            }
-            if(vis[x] == 0) cout << "No";
-            else cout << "Yes";
-            cout << '\n';
-            ti = 0;
-        }
-        else
-        {
-            ti += x;
-        }
+        cout << "Yes";
     }
     return 0;
 }
@@ -89,7 +59,7 @@ int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL
