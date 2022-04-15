@@ -22,7 +22,6 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-
 #ifdef LOCAL
     void debug_print(string s) {
         cerr << "\"" << s << "\"";
@@ -103,59 +102,54 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-const int N = 1e7 + 10;
-vector<int> spf(N, -1);
-void init()
+using pll = pair<ll, ll>;
+vector<ll> v;
+pll fun(ll num)
 {
-    for(ll i = 2; i * i < N; ++i)
+    // You need to make every number equal to num
+    pair<ll, ll> temp = {0, 0};
+    for (int i = 0; i < sz(v); i++) {
+        ll t = num - v[i];
+        ll d = t / 3;
+        temp.ff += d; temp.ss += d;
+        if(t % 3 == 1) temp.ff++;
+        else if(t % 3 == 2) temp.ss++;
+    }
+    return temp;
+}
+ll getAC(pair<ll, ll> ans, ll num)
+{
+    ll odd = 0;
+    for(int i = 0; i < sz(v); ++i)
     {
-        if(spf[i] == -1)
-        {
-            for(ll j = i * i; j < N; j += i)
-            {
-                spf[j] = i;
-            }
-        }
+        if((num - v[i]) & 1) ++odd;
+    }
+    ll one = ans.ff;
+    ll two = ans.ss;
+    while(two > 0 && one < two) one += 2, two--;
+    while(one >= odd + 2 && one >= two + 3) one -= 2, two++;
+    assert(one >= two);
+    if(one <= two + 1)
+    {
+        return one + two;
+    }
+    else
+    {
+        return (one - 1) * 2 + 1;
     }
 }
 // *-> KISS*
 int solve() {
-    int n, k, cnt {}; cin >> n >> k;
-    vector<int> v(n);
-    for(int i = 0; i < n; ++i) { 
-        cin >> v[i]; 
+    int n; cin >> n;
+    v.assign(n, 0);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
     }
-    set<vector<int>> st;
-    auto do_it = [&](int index)
-    {
-        int temp = v[index];
-        vector<int> ans;
-        while(spf[temp] != -1)
-        {
-            int num = spf[temp];
-            int c = 0;
-            while(temp % num == 0) ++c, temp /= num;
-            if(c & 1) ans.push_back(num);
-        }
-        if(temp != 1)
-        {
-            ans.push_back(temp);
-        }
-        sort(ans.begin(), ans.end());
-        if(st.count(ans))
-        {
-            ++cnt;
-            st.clear();
-            st.insert(ans);
-        }
-        else
-            st.insert(ans);
-    };
-    for(int i = 0; i < n; ++i)
-    {
-        do_it(i);
-    }
-    cout << cnt + 1;
+    sort(v.rbegin(), v.rend());
+    ll ans = LLONG_MAX;
+    for(int i = 0; i <= 100; ++i)
+    ans = min(ans, getAC(fun(v[0] + i), v[0] + i));
+    cout << ans;
     return 0;
 }
 int32_t main() {
@@ -163,7 +157,6 @@ int32_t main() {
     cin.tie(0);
     int TET = 1;
     cin >> TET;
-    init();
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

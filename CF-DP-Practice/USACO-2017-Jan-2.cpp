@@ -103,67 +103,66 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-const int N = 1e7 + 10;
-vector<int> spf(N, -1);
-void init()
-{
-    for(ll i = 2; i * i < N; ++i)
+// *-> KISS*
+int solve() {
+    freopen("hps.in", "r", stdin);
+    freopen("hps.out", "w", stdout);
+    int n, k; cin >> n >> k;
+    vector<char> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+    // index, switch, state
+    // H -> 0, P -> 1, S -> 2
+    map<char, int> mp;
+    mp['H'] = 0; mp['P'] = 1; mp['S'] = 2;
+    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(k + 1, vector<ll>(3, 0)));
+    dp[0][0][mp[v[0]]] = 1;
+    for(int i = 1; i < n; ++i)
     {
-        if(spf[i] == -1)
+        for(int sw = 0; sw <= min(i + 1, k); ++sw)
         {
-            for(ll j = i * i; j < N; j += i)
+            for(int st = 0; st < 3; ++st)
             {
-                spf[j] = i;
+                if(sw == 0)
+                {
+                    dp[i][sw][st] = max(dp[i][sw][st], (mp[v[i]] == st) + dp[i - 1][sw][st]);
+                }
+                else
+                {
+                    // either `i - 1` and `i` is the latest switch
+                    // or not!
+                    for(int pre = 0; pre < 3; ++pre)
+                    {
+                       if(st == pre)
+                        {
+                            // Second Case
+                            dp[i][sw][st] = max(dp[i][sw][st], (mp[v[i]] == st) + (dp[i - 1][sw][pre]));
+                        }
+                        else
+                        {
+                            // First Case
+                            dp[i][sw][st] = max(dp[i][sw][st], (mp[v[i]] == st) + dp[i - 1][sw - 1][pre]);
+                        }
+                    }
+                }
             }
         }
     }
-}
-// *-> KISS*
-int solve() {
-    int n, k, cnt {}; cin >> n >> k;
-    vector<int> v(n);
-    for(int i = 0; i < n; ++i) { 
-        cin >> v[i]; 
-    }
-    set<vector<int>> st;
-    auto do_it = [&](int index)
+    // debug(dp);
+    ll maxx = -1;
+    for(int st = 0; st < 3; ++st)
     {
-        int temp = v[index];
-        vector<int> ans;
-        while(spf[temp] != -1)
-        {
-            int num = spf[temp];
-            int c = 0;
-            while(temp % num == 0) ++c, temp /= num;
-            if(c & 1) ans.push_back(num);
-        }
-        if(temp != 1)
-        {
-            ans.push_back(temp);
-        }
-        sort(ans.begin(), ans.end());
-        if(st.count(ans))
-        {
-            ++cnt;
-            st.clear();
-            st.insert(ans);
-        }
-        else
-            st.insert(ans);
-    };
-    for(int i = 0; i < n; ++i)
-    {
-        do_it(i);
+        maxx = max(maxx, dp[n - 1][k][st]);
     }
-    cout << cnt + 1;
+    cout << maxx;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    cin >> TET;
-    init();
+    //cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

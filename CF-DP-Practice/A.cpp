@@ -103,67 +103,37 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-const int N = 1e7 + 10;
-vector<int> spf(N, -1);
-void init()
-{
-    for(ll i = 2; i * i < N; ++i)
-    {
-        if(spf[i] == -1)
-        {
-            for(ll j = i * i; j < N; j += i)
-            {
-                spf[j] = i;
-            }
-        }
-    }
-}
+const int N = 102;
+vector<ll> dp(N, INT_MIN);
 // *-> KISS*
 int solve() {
-    int n, k, cnt {}; cin >> n >> k;
-    vector<int> v(n);
-    for(int i = 0; i < n; ++i) { 
-        cin >> v[i]; 
+    freopen("ladder.in", "r", stdin);
+    freopen("ladder.out", "w", stdout);
+    int n; cin >> n;
+    vector<int> value(n + 1);
+    for (int i = 1; i <= n; i++) {
+        cin >> value[i];
     }
-    set<vector<int>> st;
-    auto do_it = [&](int index)
+    dp[0] = 0;
+    for(int i = 0; i <= n; ++i)
     {
-        int temp = v[index];
-        vector<int> ans;
-        while(spf[temp] != -1)
+        if(i + 1 <= n)
         {
-            int num = spf[temp];
-            int c = 0;
-            while(temp % num == 0) ++c, temp /= num;
-            if(c & 1) ans.push_back(num);
+            dp[i + 1] = max(dp[i + 1], dp[i] + value[i + 1]);
         }
-        if(temp != 1)
+        if(i + 2 <= n)
         {
-            ans.push_back(temp);
+            dp[i + 2] = max(dp[i + 2], dp[i] + value[i + 2]);
         }
-        sort(ans.begin(), ans.end());
-        if(st.count(ans))
-        {
-            ++cnt;
-            st.clear();
-            st.insert(ans);
-        }
-        else
-            st.insert(ans);
-    };
-    for(int i = 0; i < n; ++i)
-    {
-        do_it(i);
     }
-    cout << cnt + 1;
+    cout << dp[n];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    cin >> TET;
-    init();
+    //cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL
