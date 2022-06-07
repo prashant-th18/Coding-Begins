@@ -22,13 +22,42 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-// *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+vector<vector<int>> v;
+vector<bool> vis;
+vector<int> dis;
+int dfs(int node) {
+    vis[node] = true;
+    int sum = 0;
+    for(const auto& val : v[node]) {
+        if(!vis[val]) {
+            sum = max(sum, 1 + dfs(val));
+        }
+        else {
+            sum = max(sum, 1 + dis[val]);
+        }
     }
-    cout << a;
+    return dis[node] = sum;
+}
+// *-> KISS*
+int solve() {
+    int n, m; cin >> n >> m;
+    v.assign(n + 1, vector<int>());
+    vis.assign(n + 1, false);
+    dis.assign(n + 1, 0);
+    for (int i = 0; i < m; i++) {
+        int a, b; cin >> a >> b;
+        v[a].push_back(b);
+    }
+    int maxx = 0;
+    for(int i = 1; i <= n; ++i) {
+        if(vis[i]) {
+            maxx = max(maxx, dis[i]);
+        }
+        else {
+            maxx = max(maxx, dfs(i));
+        }
+    }
+    cout << maxx;
     return 0;
 }
 int32_t main() {

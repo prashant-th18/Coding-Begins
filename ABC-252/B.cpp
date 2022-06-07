@@ -23,12 +23,25 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
 // *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+int solve() {
+    int n, m; cin >> n >> m;
+    vector<int> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
     }
-    cout << a;
+    int maxx = *max_element(all(v));
+    set<int> st;
+    bool flag = false;
+    for(int i = 0; i < n; ++i) if(v[i] == maxx) st.insert(i + 1);
+    for (int i = 0; i < m; i++) {
+        int tt; cin >> tt;
+        if(st.find(tt) != st.end()) {
+            flag = true;
+        }
+        else flag |= false;
+    }
+    if(flag) cout << "Yes";
+    else cout << "No";
     return 0;
 }
 int32_t main() {

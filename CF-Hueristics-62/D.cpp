@@ -22,13 +22,35 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-// *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+vector<vector<pair<int, int>>> v;
+vector<bool> vis;
+vector<ll> dp;
+void dfs(int node, ll score) {
+    vis[node] = true;
+    dp[node] = score;
+    for(const auto& val : v[node]) {
+        if(!vis[val.ff]) {
+            dfs(val.ff, score + val.ss);
+        }
     }
-    cout << a;
+}
+// *-> KISS*
+int solve() {
+    int n; cin >> n;
+    v.assign(n + 1, vector<pair<int, int>>());
+    vis.assign(n + 1, false);
+    dp.assign(n + 1, LLONG_MAX);
+    for (int i = 0; i < n - 1; i++) {
+        int a, b, c; cin >> a >> b >> c;
+        v[a].push_back({b, c});
+        v[b].push_back({a, c});
+    }
+    int q, k; cin >> q >> k;
+    dfs(k, 0);
+    while(q--) {
+        int a, b; cin >> a >> b;
+        cout << dp[a] + dp[b] << '\n';
+    }
     return 0;
 }
 int32_t main() {

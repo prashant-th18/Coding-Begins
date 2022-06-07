@@ -23,19 +23,34 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
 // *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+int solve() {
+    int n; cin >> n;
+    map<int, vector<int>> mp;
+    vector<int> pos(n, 0);
+    for(int i = 0; i < n; ++i) {
+        int t; cin >> t;
+        mp[t].push_back(i);
     }
-    cout << a;
+    for(const auto& val : mp) {
+        if(sz(val.ss) == 1) {
+            cout << -1; return 0;
+        }
+    }
+    for(const auto& val : mp) {
+        vector<int> temp = val.ss;
+        pos[temp[0]] = temp[sz(temp) - 1];
+        for(int i = 0; i < sz(temp) - 1; ++i) {
+            pos[temp[i + 1]] = temp[i];
+        }
+    }
+    for(int i = 0; i < n; ++i) cout << pos[i] + 1 << ' ';
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

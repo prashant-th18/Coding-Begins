@@ -23,12 +23,36 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
 // *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+int solve() {
+    int n, m, p; cin >> n >> m >> p;
+    vector<int> a(n), b(m);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i]; a[i] %= p;
     }
-    cout << a;
+    for (int i = 0; i < m; i++) {
+        cin >> b[i]; b[i] %= p;
+    }
+    for(int cnt = 0; cnt < 10000; ++cnt) {
+        int i = 0, j = i + cnt;
+        ll res = 0;
+        while(i <= j) {
+            res = (res + (a[i] * b[j]) % p) % p;
+            ++i, --j;
+        }
+        if(res != 0) {
+            cout << cnt; return 0;
+        }
+        i = n - 1; j = m - 1 - cnt;
+        if(j < 0) continue;
+        res = 0;
+        while(j <= i) {
+            res = (res + (a[i] * b[j]) % p) % p;
+            --i; ++j;
+        }
+        if(res != 0) {
+            cout << n + m - 2 - cnt; return 0;
+        }
+    }
     return 0;
 }
 int32_t main() {

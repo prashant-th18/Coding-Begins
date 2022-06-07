@@ -23,19 +23,46 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
 // *-> KISS*
-int solve() {    
-    int a; cin >> a;
-    for(int i = 1; i <= 10; ++i) {
-        a += i;
+int solve() {
+    int n; cin >> n;
+    vector<ll> a(n), b(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
-    cout << a;
+    for(int i = 0; i < n; ++i) {
+        cin >> b[i];
+    }
+    ll num = 0;
+    vector<int> dp(32, 0);
+    for(int i = 0; i < n; ++i) {
+        for(int j = 0; j <= 31; ++j) {
+            dp[j] += ((b[i] >> j) & 1);
+        }
+    }
+    for(int i = 0; i < 32; ++i) if(dp[i] == n) num += (1LL << i);
+    // Validation
+    for(int i = 0; i < 32; ++i) {
+        if(dp[i] == n) {
+            for(int j = 0; j < n; ++j) {
+                if((a[j] >> i) & 1) {
+                    a[j] -= (1LL << i);
+                }
+                if((b[j] >> i) & 1) {
+                    b[j] -= (1LL << i);
+                }
+            }
+        }
+    }
+    sort(all(a)); sort(all(b));
+    if(a == b) cout << num;
+    else cout << -1;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
-    //cin >> TET;
+    cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

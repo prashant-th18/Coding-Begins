@@ -25,6 +25,5 @@ Inp: 107
 Out: 42
 
 Note:
-Consider the 1st Example.
 Non-Empty Subsegments we can remove from given number is : 1, 0, 7, 10, 07, 17, 107. After removing these
 digits, the resulting numbers are 07, 17, 10, 7, 1, 0, 0 respectively. Their sum is 42.
