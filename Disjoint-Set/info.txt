@@ -1,0 +1,25 @@
+Disjoint set is one of the advanced data structure present out there.
+Motivation behind studying Disjoint Set:
+
+1. Calculating no. of connected components
+2. Finding the MST
+
+As the name suggests, Disjoint Set has sets having distinct values.
+
+Operations performed on Disjoint Set are:
+1. Find(n):
+            to find the set, 'n' belongs to.
+            {1, 4, 7}    ,   {10, 14}
+Parent ->       1               14      (Since we can't just give any character to specify this set as there can be                                         many sets, so therefore, from each set, we choose a single elem, and make                                          it as the parent)
+
+find(4): will return 1
+find(7): will return 1
+find(10): will return 14
+
+2. Union(a, b):
+            to merge two sets (one in which 'a' belongs and other in which 'b' belongs).
+
+A = {1, 4, 7},           B = {10, 14}
+
+Union(1, 4) -> No effect as both elements present in the same set
+Unoin(1, 10) -> Will merge sets A and B

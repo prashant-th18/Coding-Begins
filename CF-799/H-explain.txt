@@ -1,0 +1,22 @@
+Toh isme ne 3 chize rkhi hui hai
+map -> mp
+dp vector
+v vector
+
+mai kya krr rha hu ki mai left se right iterate krte jaa rha hun aur element ka input le rha hun. mera mp map ye btata hai ki mujhe jo abhi element mila hai ye mujhe agr kbhi pehle mila tha toh sbse aage (mtlb sbse bde index) vo konse index pr mila tha. 
+dp[i] ek trah se ye bta rha hai ki vo konsa subsegment hai array ka jo mujhe maximum value dega (mtlb jo hme value maximise krne ko khi hai) aur ith element pr stop hoega
+
+dp[i][1] -> left index us segment ka,   dp[i][2] -> right index us segment ka,   dp[i][0] -> value us segment ki
+transitions ->
+Let's say kisi "i" index pr hun, toh ek toh yhi way hogya ki sirf isi element ko lelu dp[i] ke liye
+isliye kia -> dp[i] = {1, i, i} // 1 kyuki value ab 1 hi aaegi
+
+fir mene bola ki agr is current element ka pichla occurrence hai us pr puch leta hu ki vo kya value dera hai apne ith index pr, i.e. dp[mp[current element]], aur us se piche sochne ki jarurat ni hai kyuki dp mp[current element] aur us se piche ka khud soch lega
+
+toh bs ek maanlia array<int, 3> temp = dp[mp[current element]]
+ab dekh mai ye assume krr rha hun ki cur_elem bhi include krna hai
+toh ek same occurrence ka element aagya toh dp ki value increase krdi -> temp[0] += 1
+pr us pichli occurrence se abhi tk extra elements bhi toh aa skte hai jis se answer reduce hoga toh vo reduce krdia
+-> temp[0] -= (i - temp[2] - 1); aur fir temp[2] = i; // mtlb boldia ki segment ab is cur_elem tk aaega
+bs fir check krlia
+if(temp[0] > dp[i][0](jo ki abhi 1 hai)) dp[i] = temp;

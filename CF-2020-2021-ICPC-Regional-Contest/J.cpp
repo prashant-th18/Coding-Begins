@@ -1,6 +1,5 @@
-#ifndef ONLINE_JUDGE
-    #define LOCAL
-        #define _GLIBCXX_DEBUG
+#ifdef LOCAL
+    #define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -9,87 +8,82 @@
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
 using namespace std;
-#define MOD 1000000007
+const int MOD = 1000000007;
 typedef long long ll;
 typedef long double ld;
+#define sz(s) ((int)s.size())
 #define all(v) begin(v), end(v)
-#define sz(x) (int)x.size()
 #define ff first
 #define ss second
-#ifndef ONLINE_JUDGE
-#define debug(x) cerr << #x << " : "; _print(x); cerr << nline;
-#else
-#define debug(x)
-#endif
 
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-template <typename T> void _print(vector <T> v) { cerr << "[ "; for (auto myval : v) cerr << myval << " "; cerr << "]"; }
-template <typename T1, typename T2> void _print(vector <T1, T2> v) { cerr << "[ "; for (auto myval : v) cerr << myval.ff << ' ' << myval.ss << " "; cerr << "]"; }
-template <typename T> void _print(set <T> v) { cerr << "[ "; for (auto myval : v) cerr << myval << " "; cerr << "]"; }
-template <typename T1, typename T2> void _print(map<T1, T2> v) { cerr << "[ "; for (auto myval : v) cerr << myval.ff << ' ' << myval.ss << " "; cerr << "]"; }
-void _print(int a) {cerr << a;}
-void _print(ll a) {cerr << a;}
-void _print(char a) {cerr << a;}
-void _print(string a) {cerr << a;}
-void _print(double a) {cerr << a;}
-// **`KISS**
 
-int k;
-vector<vector<pair<ll, ll>>> v;
-
-struct Edge {
-	ll p = -1;
-	ll w = LLONG_MAX;
-	bool operator<(const Edge& other) const {
-		return abs(w - k) < abs(other.w - k);
-	}
-};
+// *-> KISS*
 int solve() {
-    int n, m; cin >> n >> m >> k;
-    v.assign(n + 1, vector<pair<ll, ll>>());
+    ll n, m, k; cin >> n >> m >> k;
+    vector<int> par(n + 1, -1);
+    vector<int> R(n + 1, 1);
+    auto find = [&](int node) {
+          vector<int> t;
+          while(par[node] > 0) {
+              t.push_back(node);
+              node = par[node];
+          }
+          for (int i = 0; i < sz(t); i++) {
+              par[t[i]] = node;
+          }
+          return node;
+    };
+    auto un = [&](int a, int b) {
+        a = find(a);
+        b = find(b);
+        if(a == b) return false;
+        if(R[a] > R[b]) {
+            R[a] += R[b];
+            par[b] = a;
+        }
+        else {
+            R[b] += R[a];
+            par[a] = b;
+        }
+        return true;
+    };
+    set<vector<ll>> st;
     for(int i = 0; i < m; ++i) {
-    	ll a, b, c; cin >> a >> b >> c;
-    	v[a].push_back({b, c - k});
-    	v[b].push_back({a, c - k});
+        ll a, b, c; cin >> a >> b >> c;
+        vector<ll> temp = {abs(c - k), a , b};
+        st.insert(temp);
     }
-    set<Edge> st;
-    vector<bool> vis(n + 1, false);
-    st.insert({1, 0});
-    // vis[1] = true;
-    for(int i = 0; i < n - 1; ++i) {
-    	assert(sz(st) > 0);
-    	ll node = st.begin() -> p;
-    	// ll w = st.begin() -> w;
-    	st.erase(st.begin());
-    	vis[node] = true;
-    	for(const auto& [x, y] : v[node]) {
-    		if(!vis[x]) {
-    			
-    		}
-    	}
+    while(sz(st) != 0) {
+        vector<ll> temp = st.begin();
+        st.erase(st.begin());
+
     }
     return 0;
 }
- 
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     int TET = 1;
     cin >> TET;
+    cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
-        if (solve()) {
+#ifdef LOCAL
+        cout << "##################" << '\n';
+#endif
+        if (solve())
+        {
             break;
         }
-        #ifdef LOCAL
-            cout << "__________________________" << endl;
-        #endif
+        cout << '\n';
     }
-    #ifdef LOCAL
-        cerr << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
+#ifdef LOCAL
+    cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+#endif
+    return 0;
 }
-// `Keep It Simple Stupid!
+// -> Keep It Simple Stupid!
