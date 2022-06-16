@@ -1,5 +1,4 @@
 *.exe
-/Coding Begins
-/Important Blogs
-/Important Files
-/Algorithms
+*.out
+/My_Problems
+/.vscode

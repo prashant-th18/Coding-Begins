@@ -1,6 +1,0 @@
-Name                     Roll No	Branch	   City                                                    CGPA
-Ram                      1	CSE       Chandigarh                                               9.8
-Shyam                    4	EE        Mandi                                                    9.2
-Akshit                   81	CSE       Una                                                      9.6
-Aryan                    78	CSE       Baddi                                                    9.2
-Parth                    28	CSE       Chandigarh                                               9.2
