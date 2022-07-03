@@ -4,9 +4,9 @@
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include "bits/stdc++.h"
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
 const int MOD = 1000000007;
 typedef long long ll;
@@ -19,9 +19,8 @@ typedef long double ld;
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
 
 #ifdef LOCAL
     void debug_print(string s) {
@@ -103,38 +102,54 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-ll add(ll a, ll b) { return (a + b) % MOD; }
-ll mul(ll a, ll b) { return a * b % MOD; }
-ll sub(ll a, ll b) { return (a - b + MOD) % MOD; }
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    vector<int> v(n), occ(n + 10, 0);
+    // READ SEGMENT TREE !!!!
+    int n, q; cin >> n >> q;
+    string s, f; cin >> s >> f;
+    vector<pair<int, int>> v(q);
+    for (int i = 0; i < q; i++) {
+        cin >> v[i].ff >> v[i].ss;
+        --v[i].ff; --v[i].ss;
+    }
+    ordered_set z, o;
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        ++occ[v[i]];
+        if(f[i] == '0') z.insert(i);
+        else o.insert(i);
     }
-    map<int, ll> f, s, mp;
-    for(int i = n - 1; i >= 0; --i) {
-        f[v[i]] = add(1, add(mul(2, f[v[i]]), f[v[i] + 1]));
-        s[v[i]] = add(s[v[i]], mul(binexp(2LL, mp[v[i]]), sub(binexp(2LL, mp[v[i] + 2]), 1)));
-        s[v[i]] = add(s[v[i]], s[v[i] + 1]);
-        debug(v[i], f[v[i]], s[v[i]]);
-        ++mp[v[i]];
+    for(int i = q - 1; i >= 0; --i) {
+        int l = v[i].ff, r = v[i].ss;
+        int maxi = (r - l + 2) / 2; --maxi;
+        int zz = z.order_of_key(r + 1) - z.order_of_key(l);
+        int oo = o.order_of_key(r + 1) - o.order_of_key(l);
+        int mini = min(zz, oo);
+        if(mini > maxi) {
+            cout << "NO"; return 0;
+        }
+        int val = l;
+        if(zz < oo) {
+            auto it = z.lower_bound(val);
+            while(it != z.end() && (*it) <= r) {
+                o.insert(*it);
+                z.erase(it);
+                it = z.lower_bound(val);
+            }
+        }
+        else {
+            auto it = o.lower_bound(val);
+            while(it != o.end() && (*it) <= r) {
+                z.insert(*it);
+                o.erase(it);
+                it = o.lower_bound(val);
+            }
+        }
     }
-    cout << add(f[0], add(s[0], sub(binexp(2, occ[1]), 1)));
+    for(auto val : z) f[val] = '0';
+    for(auto val : o) f[val] = '1';
+    if(f == s) cout << "YES";
+    else cout << "NO";
+    z.clear();
+    o.clear();
     return 0;
 }
 int32_t main() {

@@ -22,7 +22,6 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-
 #ifdef LOCAL
     void debug_print(string s) {
         cerr << "\"" << s << "\"";
@@ -103,44 +102,83 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-ll add(ll a, ll b) { return (a + b) % MOD; }
-ll mul(ll a, ll b) { return a * b % MOD; }
-ll sub(ll a, ll b) { return (a - b + MOD) % MOD; }
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    vector<int> v(n), occ(n + 10, 0);
+    ll n, q, tot = 0; cin >> n >> q;
+    ll x; cin >> x;
+    vector<ll> w(n);
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        ++occ[v[i]];
+        cin >> w[i];
+        tot += w[i];
     }
-    map<int, ll> f, s, mp;
-    for(int i = n - 1; i >= 0; --i) {
-        f[v[i]] = add(1, add(mul(2, f[v[i]]), f[v[i] + 1]));
-        s[v[i]] = add(s[v[i]], mul(binexp(2LL, mp[v[i]]), sub(binexp(2LL, mp[v[i] + 2]), 1)));
-        s[v[i]] = add(s[v[i]], s[v[i] + 1]);
-        debug(v[i], f[v[i]], s[v[i]]);
-        ++mp[v[i]];
+    vector<ll> pre(n + 1, 0);
+    for (int i = 0; i < n; i++) {
+        pre[i + 1] = pre[i] + w[i];
     }
-    cout << add(f[0], add(s[0], sub(binexp(2, occ[1]), 1)));
+    ll atLeast = x / tot;
+    int in = 0;
+    vector<int> vis(n, -1);
+    auto find = [&](int ind, ll rem) -> int {
+        int s = ind, e = n - 1;
+        int ans = ind;
+        while(s <= e) {
+            ll mid = (s + e) / 2;
+            if(pre[mid + 1] - pre[ind] >= rem) {
+                ans = mid;
+                e = mid - 1;
+            }
+            else s = mid + 1;
+        }
+        return ans;
+    };
+    int last = 0, c = 0;
+    vector<ll> ans;
+    while(vis[in] == -1) {
+        vis[in] = c++;
+        ll rem = x - atLeast * tot;
+        ll temp = atLeast * n;
+        if(rem == 0) {
+            ans.push_back(temp);
+            break;
+        }
+        else {
+            ll tt = pre[n] - pre[in];
+            int where = 0;
+            if(tt >= rem) {
+                where = find(in, rem);
+                temp += (where - in + 1);
+                in = (where + 1) % n;
+            }
+            else {
+                temp += (n - in);
+                rem -= (tt);
+                where = find(0, rem);
+                temp += (where + 1);
+                in = (where + 1) % n;
+            }
+            ans.push_back(temp);
+            last = vis[in];
+        }
+    }
+    debug(ans);
+    while(q--) {
+        ll k; cin >> k;
+        --k;
+        if(k >= sz(ans)) {
+            k -= sz(ans);
+            k = k % (sz(ans) - last);
+            cout << ans[last + k] << '\n';
+        }
+        else {
+            cout << ans[k] << '\n';
+        }
+    }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

@@ -22,7 +22,6 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-
 #ifdef LOCAL
     void debug_print(string s) {
         cerr << "\"" << s << "\"";
@@ -103,44 +102,41 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-ll add(ll a, ll b) { return (a + b) % MOD; }
-ll mul(ll a, ll b) { return a * b % MOD; }
-ll sub(ll a, ll b) { return (a - b + MOD) % MOD; }
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
-    }
-    return ans;
-}
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    vector<int> v(n), occ(n + 10, 0);
+    vector<int> v(n);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        ++occ[v[i]];
     }
-    map<int, ll> f, s, mp;
+    vector<vector<int>> dp(n, vector<int>(n, 0));
     for(int i = n - 1; i >= 0; --i) {
-        f[v[i]] = add(1, add(mul(2, f[v[i]]), f[v[i] + 1]));
-        s[v[i]] = add(s[v[i]], mul(binexp(2LL, mp[v[i]]), sub(binexp(2LL, mp[v[i] + 2]), 1)));
-        s[v[i]] = add(s[v[i]], s[v[i] + 1]);
-        debug(v[i], f[v[i]], s[v[i]]);
-        ++mp[v[i]];
+        for(int j = i; j < n; ++j) {
+            if(i == j) {
+                dp[i][j] = 1;
+            }
+            else {
+                int mini = 1e8;
+                if(v[i] == v[j]) {
+                    if(i + 1 == j) mini = 1;
+                    else {
+                        mini = dp[i + 1][j - 1];
+                    }
+                }
+                for(int k = i; k < j; ++k) {
+                    mini = min(mini, dp[i][k] + dp[k + 1][j]);
+                }
+                dp[i][j] = mini;
+            }
+        }
     }
-    cout << add(f[0], add(s[0], sub(binexp(2, occ[1]), 1)));
+    cout << dp[0][n - 1];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

@@ -4,9 +4,9 @@
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include "bits/stdc++.h"
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
 const int MOD = 1000000007;
 typedef long long ll;
@@ -19,9 +19,8 @@ typedef long double ld;
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
-
 
 #ifdef LOCAL
     void debug_print(string s) {
@@ -103,44 +102,95 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-ll add(ll a, ll b) { return (a + b) % MOD; }
-ll mul(ll a, ll b) { return a * b % MOD; }
-ll sub(ll a, ll b) { return (a - b + MOD) % MOD; }
-template<typename T>
-T binexp(T a, T b) {
-    T ans = 1;
-    while (b) {
-        if (b & 1) {
-            ans = 1LL * ans * a % MOD;
-        }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
+int n;
+vector<int> v;
+vector<set<int>> t;
+void build(int in = 1, int s = 0, int e = n - 1) {
+    if(s == e) {
+        t[in].insert(v[s]);;
     }
-    return ans;
+    else {
+        int mid = (s + e) / 2;
+        build(2 * in, s, mid);
+        build(2 * in + 1, mid + 1, e);
+        for(auto val : t[2 * in]) {
+            t[in].insert(val);
+        }
+        for(auto val : t[2 * in + 1]) {
+            if(t[in].count(val)) t[in].erase(val);
+            else t[in].insert(val);
+        }
+    }
+}
+void update(int in, int s, int e, int pos, int nval) {
+    if(s == e) {
+        t[in].erase(v[s]);
+        v[s] = nval;
+        t[in].insert(v[s]);
+    }
+    else {
+        int mid = (s + e) / 2;
+        if(pos <= mid) update(2 * in, s, mid, pos, nval);
+        else update(2 * in + 1, mid + 1, e, pos, nval);
+        t[in].clear();
+        for(auto val : t[2 * in]) t[in].insert(val);
+        for(auto val : t[2 * in + 1]) {
+            if(t[in].count(val)) t[in].erase(val);
+            else t[in].insert(val);
+        }
+    }
+}
+set<int> query(int in, int s, int e, int qs, int qe) {
+    if(qs > qe) {
+        return {};
+    }
+    else if(s == qs && e == qe) {
+        return t[in];
+    }
+    else {
+        int mid = (s + e) / 2;
+        auto st1 = query(2 * in, s, mid, qs, min(mid, qe));
+        auto st2 = query(2 * in + 1, mid + 1, e, max(qs, mid + 1), qe);
+        set<int> st;
+        for(auto val : st1) st.insert(val);
+        for(auto val : st2) {
+            if(st.count(val)) st.erase(val);
+            else st.insert(val);
+        }
+        return st;
+    }
 }
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    vector<int> v(n), occ(n + 10, 0);
+    cin >> n;
+    v.assign(n, 0);
+    t.assign(4 * n, {});
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        ++occ[v[i]];
     }
-    map<int, ll> f, s, mp;
-    for(int i = n - 1; i >= 0; --i) {
-        f[v[i]] = add(1, add(mul(2, f[v[i]]), f[v[i] + 1]));
-        s[v[i]] = add(s[v[i]], mul(binexp(2LL, mp[v[i]]), sub(binexp(2LL, mp[v[i] + 2]), 1)));
-        s[v[i]] = add(s[v[i]], s[v[i] + 1]);
-        debug(v[i], f[v[i]], s[v[i]]);
-        ++mp[v[i]];
+    build();
+    int q; cin >> q;
+    while(q--) {
+        int tt; cin >> tt;
+        if(tt == 1) {
+            int i, val; cin >> i >> val;
+            update(1, 0, n - 1, i - 1, val);
+        }
+        else {
+            int l, r; cin >> l >> r;
+            --l, --r;
+            auto mp = query(1, 0, n - 1, l, r);
+            if(sz(mp) <= 1) cout << "YES";
+            else cout << "NO";
+            cout << '\n';
+        }
     }
-    cout << add(f[0], add(s[0], sub(binexp(2, occ[1]), 1)));
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);
