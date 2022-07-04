@@ -5,7 +5,7 @@ int main()
     string text, pattern;
     cin >> text >> pattern;
     vector<int> lps(sz(pattern), 0);
-    // Computing values of LPS Array
+    // Computing values of LPS Array(Longest Proper Prefix which is also a suffix)
     {
         int len = 0, i = 1;
         lps[0] = 0;
