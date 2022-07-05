@@ -3,7 +3,7 @@
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
@@ -24,54 +24,47 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-    vector<int> in(n + 1, 0);
-    vector<vector<int>> v(n + 1);
+    int n, k; cin >> n >> k;
+    vector<int> m(n, 0);
     for (int i = 0; i < n; i++) {
-        int k; cin >> k;
-        for (int j = 0; j < k; j++) {
-            int t; cin >> t;
-            v[t].push_back(i + 1);
-            in[i + 1]++;
+        cin >> m[i];
+    }
+    vector<int> ms(k, 0);
+    for (int i = 0; i < k; i++) {
+        cin >> ms[i];
+    }
+    sort(m.begin(), m.end());
+    multiset<pair<int, int>> st;
+    for (int i = 0; i < n; i++) {
+        st.insert(pair(ms[m[i] - 1], -m[i]));
+    }
+    vector<vector<int>> ans;
+    while(sz(st)) {
+        vector<int> t;
+        int val = 1;
+        auto it = st.lower_bound(pair(val, -k));
+        while(it != st.end()) {
+            t.push_back(-(*it).ss);
+            ++val;
+            st.erase(it);
+            it = st.lower_bound(pair(val, -k));
         }
+        ans.push_back(t);
     }
-    set<int> st;
-    for(int i = 1; i <= n; ++i) {
-        if(in[i] == 0) st.insert(i);
+    cout << sz(ans) << '\n';
+    for(auto& v1 : ans) {
+        cout << sz(v1) << ' ';
+        for(auto& v2: v1) cout << v2 << ' ';
+        cout << '\n';
     }
-    int cnt = 1, ans = 0;
-    if(sz(st) == 0) {
-        cout << -1; return 0;
-    }
-    int num = *st.begin();
-    while(sz(st) != 0) {
-        auto it = st.lower_bound(num);
-        if(it == st.end()) {
-            num = *st.begin();
-            ++cnt;
-        }
-        else {
-            int node = *it;
-            for(const auto& val : v[node]) {
-                --in[val];
-                if(in[val] == 0) {
-                    st.insert(val);
-                }
-            }
-            num = node;
-            ++ans;
-            st.erase(node);
-        }
-    }
-    if(ans == n) cout << cnt;
-    else cout << -1;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
+    bool test = false;
     int TET = 1;
-    cin >> TET;
+    if(test) cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL
