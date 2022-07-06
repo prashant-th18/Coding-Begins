@@ -8,7 +8,7 @@
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
 using namespace std;
-const long long MOD = 1000000007;
+const int MOD = 1000000007;
 typedef long long ll;
 typedef long double ld;
 #define sz(s) ((int)s.size())
@@ -102,133 +102,66 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
-int n, N = 1e6;
-vector<int> v, t, ans;
-vector<int> fact(N, 1);
+int n;
+vector<int> v, t;
 void build(int in = 1, int s = 0, int e = n - 1) {
-    if(s == e) t[in] = ans[s];
+    if(s == e) {
+        t[in] = v[s];
+    }
     else {
         int mid = (s + e) / 2;
         build(2 * in, s, mid);
         build(2 * in + 1, mid + 1, e);
-        t[in] = t[2 * in] + t[2 * in + 1];
-    }
-}
-int query(int in, int s, int e, int qs, int qe) {
-    if(qs > qe) {
-        return 0;
-    }
-    else if(s == qs && e == qe) return t[in];
-    else {
-        int mid = (s + e) / 2;
-        return query(2 * in, s, mid, qs, min(qe, mid)) + query(2 * in + 1, mid + 1, e, max(qs, mid + 1), qe);
+        int val = log2(e - s + 1);
+        if(val & 1) {
+            t[in] = t[2 * in] | t[2 * in + 1];
+        }
+        else {
+            t[in] = t[2 * in] ^ t[2 * in + 1];
+        }
     }
 }
 void update(int in, int s, int e, int pos, int nval) {
     if(s == e) {
         t[in] = nval;
+        v[s] = nval;
     }
     else {
         int mid = (s + e) / 2;
         if(pos <= mid) update(2 * in, s, mid, pos, nval);
         else update(2 * in + 1, mid + 1, e, pos, nval);
-        t[in] = t[2 * in] + t[2 * in + 1];
-    }
-}
-template<typename T>
-T binexp(T a, T b) {
-    T anss = 1;
-    while (b) {
-        if (b & 1) {
-            anss = 1LL * anss * a % MOD;
+        int val = log2(e - s + 1);
+        if(val & 1) {
+            t[in] = t[2 * in] | t[2 * in + 1];
         }
-        a = 1LL * a * a % MOD;
-        b >>= 1;
+        else {
+            t[in] = t[2 * in] ^ t[2 * in + 1];
+        }
     }
-    return anss;
-}
-ll inv(ll a) {
-    return binexp(a, MOD - 2);
-}
-ll ncr(ll nn, ll r) {
-    if(r > nn) return 0;
-    return fact[nn] * inv(fact[nn - r]) % MOD * inv(fact[r]) % MOD;
 }
 // *-> KISS*
 int solve() {
     cin >> n;
+    n = (1 << n);
+    int m; cin >> m;
     v.assign(n, 0);
     t.assign(4 * n, 0);
-    ans.assign(n, 1);
-    map<int, int> mp;
-    for(int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
         cin >> v[i];
-        mp[v[i]] = i;
     }
-    int i = mp[0] - 1, j = mp[0] + 1;
-    vector<pair<int, int>> loc;
-    loc.push_back(pair(mp[0], 1));
-    set<int> st;
-    for(int ii = 1; ii <= n; ++ii) st.insert(ii);
-    int mex = 1;
-    while(mex < n) {
-        int l = mp[mex];
-        if(l < mp[0]) {
-            while(l <= i) {
-                st.erase(v[i]);
-                --i;
-            }
-            mex = *st.begin();
-            loc.push_back(pair(i + 1, mex));
-        }
-        else {
-            while(j <= l) {
-                st.erase(v[j]);
-                ++j;
-            }
-            mex = *st.begin();
-            loc.push_back(pair(j - 1, mex));
-        }
-    }
-    for(auto val : loc) ans[val.ff] = 0;
     build();
-    int in = 0;
-    auto f = [&]() -> int {
-        while(in < n && ans[in] == 0) ++in;
-        return in;
-    };
-    ll last = 1;
-    int how = 1;
-    int s = INT_MAX, e = INT_MIN;
-    if(sz(loc) == 1) cout << last;
-    else {
-        for(int ii = 1; ii < sz(loc); ++ii) {
-            s = min({s, loc[ii].ss, loc[ii - 1].ss});
-            e = max({e, loc[ii].ss, loc[ii - 1].ss});
-            int ex = abs(loc[ii].ss - loc[ii - 1].ss); --ex;
-            ++how;
-            int num = e - s + 1 - how;
-            int sum = query(1, 0, n - 1, s, e);
-            debug(sum, num, s, e, ans);
-            last = (last * (ncr(sum, num) * fact[num]) % MOD) % MOD;
-            while(num > 0) {
-                f();
-                debug(in);
-                ans[in] = 0;
-                update(1, 0, n - 1, in, 0);
-                --num;
-            }
-        }
-        cout << last;
+    while(m--) {
+        int i, j; cin >> i >> j;
+        update(1, 0, n - 1, i - 1, j);
+        cout << t[1] << '\n';
     }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
-    for(ll i = 2; i < N; ++i) fact[i] = fact[i - 1] * i % MOD;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
