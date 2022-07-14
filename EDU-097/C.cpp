@@ -3,12 +3,12 @@
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
 using namespace std;
-#define MOD 1000000007
+const int MOD = 1000000007;
 typedef long long ll;
 typedef long double ld;
 #define sz(s) ((int)s.size())
@@ -25,20 +25,34 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    map<int, int> mp;
+    vector<int> v(n);
     for (int i = 0; i < n; i++) {
-        int t; cin >> t;
-        mp[t]++;
+        cin >> v[i];
     }
-    mp[0] = 1; // Fake
-
+    sort(v.begin(), v.end());
+    vector<vector<ll>> dp(n + 1, vector<ll>(n * 2 + 1, 0));
+    for (int j = 0; j <= n * 2; j++) {
+        dp[0][j] = 0;
+    }
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 0; j <= n * 2; ++j) {
+            if(j == 0) dp[i][j] = INT_MAX;
+            else {
+                ll op1 = abs(j - v[i - 1]) + dp[i - 1][j - 1];
+                ll op2 = dp[i][j - 1];
+                dp[i][j] = min(op1, op2);
+            }
+        }
+    }
+    cout << dp[n][n * 2];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
+    bool test = true;
     int TET = 1;
-    cin >> TET;
+    if(test) cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

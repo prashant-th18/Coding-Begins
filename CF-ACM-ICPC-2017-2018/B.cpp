@@ -38,15 +38,27 @@ void _print(double a) {cout << a;}
 // *-> KISS*
 int solve() {
     int n; cin >> n;
-    set<int> st;
-    for(int i = 0; i < n; ++i) st.insert(i);
-    while(sz(st) != 0)
-    {
-        vector<int> v;
-        for(const auto& val : st)
-        {
-            
+    vector<vector<int>> v;
+    for(int i = 0; i < n; ++i) {
+        int t; cin >> t;
+        int ans = -1;
+        int s = 0, e = sz(v) - 1;
+        while(s <= e) {
+            int mid = midpoint(s, e);
+            if(v[mid].back() < t) {
+                ans = mid;
+                e = mid - 1;
+            }
+            else {
+                s = mid + 1;
+            }
         }
+        if(ans != -1) v[ans].push_back(t);
+        else v.push_back(vector<int>(1, t));
+    }
+    for(auto v1 : v) {
+        for(auto v2 : v1) cout << v2 << ' ';
+        cout << '\n';
     }
     return 0;
 }
