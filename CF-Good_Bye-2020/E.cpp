@@ -22,41 +22,52 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
+ll mul(ll a, ll b) {
+    return (a * b) % MOD;
+}
+ll add(ll a, ll b) {
+    return (a + b) % MOD;
+}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
+    ll n; cin >> n;
     vector<ll> v(n);
-    vector<ll> bits(64, 0);
-    vector<vector<ll>> store(64);
+    vector<ll> bits(61, 0);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for(int j = 0; j < 61; ++j) {
+        for (int j = 0; j < 61; j++) {
             bits[j] += ((v[i] >> j) & 1);
         }
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                // j-th bit set
-                store[j].push_back(v[i]);
-            }
-        }
     }
-    vector<vector<ll>> pre(64, vector<ll>(64, 0));
-    for (int i = 0; i < 61; i++) {
-        for(auto& val : store[i]) {
-            for(int j = 0; j < 61; ++j) {
-                pre[i][j] += ((val >> j) & 1);
-            }
-        }
-    }
-    // pre[i][j] -> stores all the numbers whose ith bit is set, how many of them have their "jth" bit also set
-    ll ans = 0;
-    for(int i = 0; i < n; ++i) {
+    vector<ll> c(n); // Contribute
+    for (int i = 0; i < n; i++) {
         for(int j = 0; j < 61; ++j) {
             if((v[i] >> j) & 1) {
-                // pre[j]
+                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+            }
+            else {
+                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
             }
         }
     }
+    // Contribution Code done
+    vector<ll> ans(61, 0);
+    for (int i = 0; i < n; i++) {
+        for(int j = 0; j < 61; ++j) {
+            if((v[i] >> j) & 1) {
+                ans[j] = add(ans[j], c[i]);
+            }
+        }
+    }
+    ll sum = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 61; j++) {
+            if((v[i] >> j) & 1) {
+                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
+            }
+        }
+    }
+    cout << sum;
     return 0;
 }
 int32_t main() {

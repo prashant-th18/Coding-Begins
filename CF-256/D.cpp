@@ -3,7 +3,7 @@
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
@@ -22,63 +22,108 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
+
+#ifdef LOCAL
+    void debug_print(string s) {
+        cerr << "\"" << s << "\"";
+    }
+
+    void debug_print(const char* s) {
+        debug_print((string)s);
+    }
+
+    void debug_print(bool val) {
+        cerr << (val ? "true" : "false");
+    }
+
+    void debug_print(int val) {
+        cerr << val;
+    }
+
+    void debug_print(ll val) {
+        cerr << val;
+    }
+
+    void debug_print(double val) {
+        cerr << val;
+    }
+
+    template<typename F, typename S>
+    void debug_print(pair<F, S> val) {
+        cerr << "(";
+        debug_print(val.first);
+        cerr << ", ";
+        debug_print(val.second);
+        cerr << ")";
+    }
+
+    void debug_print(vector<bool> val) {
+        cerr << "{";
+        bool first = true;
+        for (bool x : val) {
+            if (!first) {
+                cerr << ", ";
+            } else {
+                first = false;
+            }
+            debug_print(x);
+        }
+        cerr << "}";
+    }
+
+    template<typename T>
+    void debug_print(T val) {
+        cerr << "{";
+        bool first = true;
+        for (const auto &x : val) {
+            if (!first) {
+                cerr << ", ";
+            } else {
+                first = false;
+            }
+            debug_print(x);
+        }
+        cerr << "}";
+    }
+
+    void debug_print_collection() {
+        cerr << endl;
+    }
+
+    template<typename First, typename... Args>
+    void debug_print_collection(First val, Args... args) {
+        cerr << " ";
+        debug_print(val);
+        debug_print_collection(args...);
+    }
+
+#define debug(...) cerr << "@@@ " << #__VA_ARGS__ << " ="; debug_print_collection(__VA_ARGS__);
+
+#else
+    #define debug(...) 
+#endif
+
 // *-> KISS*
 int solve() {
-    ll n, s; cin >> n >> s;
-    vector<pair<ll, ll>> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i].ff >> v[i].ss;
-    }
-    ll si = 1, ei = s, ans{};
-    while(si <= ei) {
-        ll mid = midpoint(si, ei);
-        ll lower {}, higher {}, sum {};
-        for (int i = 0; i < n; i++) {
-            if(v[i].ss < mid) sum += v[i].ff, ++lower;
-            else if(mid < v[i].ff) sum += v[i].ff, ++higher;
-        }
-        if(lower > n / 2) {
-            ei = mid - 1;
-        }
-        else if(higher > n / 2) {
-            si = mid + 1;
-        }
-        else {
-            lower = n / 2 - lower;
-            higher = n / 2 - higher;
-            vector<ll> temp;
-            for(int i = 0; i < n; ++i) {
-                if(v[i].ff <= mid && mid <= v[i].ss) {
-                    temp.push_back(v[i].ff);
-                }
-            }
-            sort(temp.begin(), temp.end());
-            for (int i = 0; i < sz(temp); i++) {
-                if(lower) {
-                    --lower;
-                    sum += temp[i];
-                }
-                else {
-                    sum += mid;
-                }
-            }
-            if(sum <= s) {
-                ans = mid;
-                si = mid + 1;
-            }
-            else {
-                ei = mid - 1;
-            }
+    map<int, int> mp;
+    int n, m, k; cin >> n >> m >> k;
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 1; j <= m; ++j) {
+            ++mp[i * j];
         }
     }
-    cout << ans;
+    for(auto [x, y] : mp) {
+        cout << x << " --> " << y << endl;
+    }
+    debug(sz(mp));
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
+    bool test = false;
     int TET = 1;
-    cin >> TET;
+    if(test) cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
 #ifdef LOCAL

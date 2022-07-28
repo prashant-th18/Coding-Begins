@@ -1,26 +1,23 @@
+#include<bits/stdc++.h>
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 class Solution {
 public:
-    vector<int> cnt, wi;
-    int i, c = 0;
+    int sum = 0;
+    vector<int> pre;
     Solution(vector<int>& w) {
-        cnt = w;
-        wi = w;
-        i = 0;
+        sum += w[0];
+        pre.push_back(w[0]);
+        for (int i = 1; i < w.size(); i++) {
+            pre.push_back(pre.back() + w[i]);
+            sum += w[i];
+        }
     }
     
     int pickIndex() {
-        if(c == cnt.size()) {
-            cnt = wi;
-            c = 0;
-        }
-        while(cnt[i] == 0) {
-            i = (i + 1) % cnt.size();
-        }
-        cnt[i]--;
-        if(cnt[i] == 0) ++c;
-        int ind = i;
-        i = (i + 1) % cnt.size();
-        return ind;
+        // int num = uniform_int_distribution<int>(0, sum)(rng);
+        int num = rand() % (sum) + 1;
+        auto it = lower_bound(begin(pre), end(pre), num) - begin(pre);
+        return it;
     }
 };
 

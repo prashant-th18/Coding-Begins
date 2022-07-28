@@ -4,9 +4,9 @@
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
 #include "bits/stdc++.h"
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
+// using namespace __gnu_pbds;
 using namespace std;
 const int MOD = 1000000007;
 typedef long long ll;
@@ -19,7 +19,7 @@ typedef long double ld;
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-#define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
+// #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
 #ifdef LOCAL
@@ -104,52 +104,30 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    // READ SEGMENT TREE !!!!
-    int n, q; cin >> n >> q;
-    string s, f; cin >> s >> f;
-    vector<pair<int, int>> v(q);
-    for (int i = 0; i < q; i++) {
-        cin >> v[i].ff >> v[i].ss;
-        --v[i].ff; --v[i].ss;
-    }
-    ordered_set z, o;
+    int n, k; cin >> n >> k;
+    vector<ll> v(n);
     for (int i = 0; i < n; i++) {
-        if(f[i] == '0') z.insert(i);
-        else o.insert(i);
+        cin >> v[i];
     }
-    for(int i = q - 1; i >= 0; --i) {
-        int l = v[i].ff, r = v[i].ss;
-        int maxi = (r - l + 2) / 2; --maxi;
-        int zz = z.order_of_key(r + 1) - z.order_of_key(l);
-        int oo = o.order_of_key(r + 1) - o.order_of_key(l);
-        int mini = min(zz, oo);
-        if(mini > maxi) {
-            cout << "NO"; return 0;
-        }
-        int val = l;
-        if(zz < oo) {
-            auto it = z.lower_bound(val);
-            while(it != z.end() && (*it) <= r) {
-                o.insert(*it);
-                z.erase(it);
-                it = z.lower_bound(val);
+    sort(v.begin(), v.end());
+    debug(v);
+    return 0;
+    {
+        int cnt = 0;
+        while(cnt++ < 5) {
+            sort(v.begin(), v.end());
+            debug(v);
+            vector<ll> t;
+            for(int i = 0; i < n; ++i) {
+                for(int j = 0; j < n; ++j) {
+                    t.push_back(2 * v[i] - v[j]);
+                }
+                t.push_back(v[i]);
             }
-        }
-        else {
-            auto it = o.lower_bound(val);
-            while(it != o.end() && (*it) <= r) {
-                z.insert(*it);
-                o.erase(it);
-                it = o.lower_bound(val);
-            }
+            v = t;
+            n = sz(v);
         }
     }
-    for(auto val : z) f[val] = '0';
-    for(auto val : o) f[val] = '1';
-    if(f == s) cout << "YES";
-    else cout << "NO";
-    z.clear();
-    o.clear();
     return 0;
 }
 int32_t main() {

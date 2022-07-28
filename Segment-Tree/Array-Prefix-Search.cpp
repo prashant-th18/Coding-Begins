@@ -39,7 +39,7 @@ int query(int in, int s, int e, int sum) {
     if(s == e) {
         if(t[in] == sum) return s;
         else return -1;
-    :w
+    }
     int mid = (s + e) / 2;
     if(t[2 * in] >= sum) {
         return query(2 * in, s, mid, sum);
