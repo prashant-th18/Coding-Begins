@@ -16,9 +16,12 @@ typedef long double ld;
 #define ff first
 #define ss second
 
+
 // mt19937 rnd(239);
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
+#define uid(a, b) uniform_int_distribution<int>(a, b)
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
@@ -104,30 +107,22 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    vector<ll> v(n);
+    int n; cin >> n;
+    vector<int> v(n);
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
+        v[i] = uniform_int_distribution<int>(1, 10)(rng);
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
-    {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
-            }
-            v = t;
-            n = sz(v);
+    while(sz(v) != 1) {
+        sort(v.begin(), v.end());
+        debug(v);
+        vector<int> t;
+        for(int i = 1; i < n; ++i) {
+            t.push_back(v[i] - v[i - 1]);
         }
+        v = t;
+        --n;
     }
+    debug(v);
     return 0;
 }
 int32_t main() {

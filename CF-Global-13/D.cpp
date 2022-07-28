@@ -22,52 +22,48 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
-    for (int i = 0; i < n; i++) {
+    int n; cin >> n;
+    vector<int> v(n);
+    for(int i = 0; i < n; ++i) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
+    }
+    ll ans = 0;
+    set<int> st;
+    for(int i = 0; i <= n; ++i) {
+        st.insert(i);
+    }
+    for(int i = 0; i < n; ++i) {
+        if(v[i] == 1) continue;
+        else {
+            if(v[i] + i >= n) {
+                // v[i] == n - i - 1
+                ans += (v[i] - (n - i - 1));
+                v[i] = n - i - 1;
+                // v[i] + i == n - 1
+            }
+            if(v[i] <= 0) {
+                ans -= (1 - v[i]);
+                v[i] = 1;
+            }
+            while(v[i] > 1) {
+                int j = i;
+                ++ans;
+                while(j < n) {
+                    int tt = v[j] + j;
+                    v[j] = max(1, v[j] - 1);
+                    if(v[j] == 1) if(st.count(j)) st.erase(j);
+                    j = tt;
+                    if(j >= n) break;
+                    else {
+                        j = *st.lower_bound(j);
+                    }
+                }
+            }
         }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
-        }
-    }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    cout << ans;
     return 0;
 }
 int32_t main() {

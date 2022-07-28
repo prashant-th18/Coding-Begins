@@ -22,52 +22,47 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
+bool check(string s) {
+    int bal = 0;
+    for(int i = 0; i < sz(s); ++i) {
+        if(s[i] == '(') ++bal;
+        else {
+            --bal;
+        }
+        if(bal < 0) return false;
+    }
+    return bal == 0;
 }
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
+    string s; cin >> s;
+    int n = sz(s);
+    int l = n / 2, r = n / 2;
+    for(int i = 0; i < n; ++i) {
+        if(s[i] == '(') --l;
+        else if(s[i] == ')') --r;
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    int p1 = -1, p2 = -1;
+    for(int i = 0; i < n; ++i) {
+        if(s[i] == '?') {
+            if(l > 0) {
+                p1 = i;
+                --l;
+                s[i] = '(';
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                if(p2 == -1) p2 = i;
+                --r;
+                s[i] = ')';
             }
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
+    if(p1 != -1 && p2 != -1) {
+        swap(s[p1], s[p2]);
+        if(!check(s)) cout << "Yes";
+        else cout << "No";
     }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    else cout << "Yes";
     return 0;
 }
 int32_t main() {

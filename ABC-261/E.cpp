@@ -22,58 +22,57 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n, c; cin >> n >> c;
+    vector<pair<int, int>> v(n);
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
+        cin >> v[i].ff >> v[i].ss;
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    vector<vector<int>> z(n, vector<int>(31, 0));
+    auto o = z;
+    auto apply = [&](int sym, int num, int pre) {
+        if(sym == 1) {
+            return num & pre;
+        }
+        else if(sym == 2) {
+            return num | pre;
+        }
+        else return num ^ pre;
+    };
+    auto init = [&](vector<vector<int>>& f, int def) -> void {
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < 31; ++j) {
+                if(i == 0) {
+                    f[i][j] = apply(v[i].ff, (v[i].ss >> j) & 1, def);
+                }
+                else {
+                    f[i][j] = apply(v[i].ff, (v[i].ss >> j) & 1, f[i - 1][j]);
+                }
+            }
+        }
+    };
+    init(z, 0);
+    init(o, 1);
+    for(int i = 0; i < n; ++i) {
+        int num = 0;
+        for(int j = 0; j < 31; ++j) {
+            if((c >> j) & 1) {
+                if(o[i][j] & 1) num += (1 << j);
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                if(z[i][j] & 1) num += (1 << j);
             }
         }
+        cout << num << '\n';
+        c = num;
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

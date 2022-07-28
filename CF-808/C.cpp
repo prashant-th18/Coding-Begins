@@ -22,52 +22,60 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n, q; cin >> n >> q;
+    int index = 0, ans = 0, rq = q;
+    vector<int> v(n);
+    vector<bool> vis(n, false);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
+        if(v[i] <= q) {
+            vis[i] = true;
+            index = i + 1;
+            ++ans;
         }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
+    for(int i = index; i < n; ++i) {
+        if(q > 0) {
+            vis[i] = true;
+            --q;
+            ++ans;
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
+    q = rq;
+    int s = 0, e = n;
+    vector<bool> vi;
+    while(s <= e) {
+        vi.assign(n, false);
+        int mid = (s + e) / 2;
+        // [0 .. mid - 1] -> q
+        // Fir interactive
+        int temp = 0;
+        for(int i = 0; i < mid; ++i) {
+            temp += (v[i] <= q);
+            if(v[i] <= q) vi[i] = true;
+        }
+        int tq = q;
+        for(int i = mid; i < n; ++i) {
+            if(v[i] <= tq) ++temp, vi[i] = true;
+            else if(tq > 0) {
+                ++temp;
+                --tq;
+                vi[i] = true;
             }
         }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
+        if(temp >= ans) {
+            ans = temp;
+            e = mid - 1;
+            vis = vi;
         }
+        else s = mid + 1;
     }
-    cout << sum;
+    for(int i = 0; i < n; ++i) {
+        if(vis[i]) cout << "1";
+        else cout << "0";
+    }
     return 0;
 }
 int32_t main() {

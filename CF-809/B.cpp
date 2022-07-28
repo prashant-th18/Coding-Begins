@@ -22,52 +22,54 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n; cin >> n;
+    vector<vector<int>> v(n + 1);
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
+        int t; cin >> t;
+        v[t].push_back(i);
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    vector<int> ans(n + 1, 0);
+    for(int i = 1; i <= n; ++i) {
+        if(sz(v[i]) == 0) continue;
+        vector<int>& pos = v[i];
+        vector<array<int, 2>> dp(sz(pos), {0, 0});
+        vector<int> odd, even;
+        if(pos[sz(pos) - 1] % 2 == 0) {
+            even.push_back(1);
+        }
+        else odd.push_back(1);
+        int t = 1;
+        for(int j = sz(pos) - 2; j >= 0; --j) {
+            int elem = pos[j] % 2;
+            if(elem == 0) {
+                // Even
+                if(sz(odd)) {
+                    int maybe = 1 + odd.back();
+                    t = max(t, maybe);
+                    if(sz(even)) even.push_back(max(even.back(), maybe));
+                    else even.push_back(maybe);
+                }
+                else {
+                    if(sz(even) == 0) even.push_back(1);
+                }
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                if(sz(even)) {
+                    int maybe = 1 + even.back();
+                    t = max(t, maybe);
+                    if(sz(odd)) odd.push_back(max(odd.back(), maybe));
+                    else odd.push_back(maybe);
+                }
+                else {
+                    if(sz(odd) == 0) odd.push_back(1);
+                }
             }
         }
+        ans[i] = t;
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    for(int i = 1; i <= n; ++i) cout << ans[i] << ' ';
     return 0;
 }
 int32_t main() {

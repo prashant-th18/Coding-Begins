@@ -102,32 +102,62 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
+int n;
+vector<vector<int>> v;
+vector<ll> t;
+int dfs(int node, int par = -1) {
+    int c = 1;
+    for(const auto& val : v[node]) {
+        if(val == par) continue;
+        int temp = dfs(val, node);
+        c += temp;
+        t.push_back(1LL * temp * (n - temp));
+    }
+    return c;
+}
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    vector<ll> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
+    cin >> n;
+    v.assign(n + 1, vector<int>());
+    t.clear();
+    for(int i = 0; i < n - 1; ++i) {
+        int a, b; cin >> a >> b;
+        v[a].push_back(b);
+        v[b].push_back(a);
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
-    {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
+    dfs(1);
+    sort(t.rbegin(), t.rend());
+    debug(t);
+    int m; cin >> m;
+    vector<ll> p(m);
+    for (int i = 0; i < m; i++) {
+        cin >> p[i];
+    }
+    sort(p.begin(), p.end(), greater<>());
+    while(sz(t) > sz(p)) {
+        p.push_back(1);
+    }
+    m = sz(p);
+    ll ans = 0;
+    auto add = [&](ll a, ll b) -> ll {
+        return (a + b) % MOD;
+    };
+    auto mul = [&](ll a, ll b) -> ll {
+        return a * b % MOD;
+    };
+    for(int i = sz(t) - 1, j = m - 1; i >= 0; --i) {
+        if(i == 0) {
+            ll all = 1;
+            while(j >= 0) {
+                all = mul(all, p[j--]);
             }
-            v = t;
-            n = sz(v);
+            ans = add(ans, mul(all, t[i]));
+        }
+        else {
+            ans = add(ans, mul(p[j--], t[i]));
         }
     }
+    cout << ans;
     return 0;
 }
 int32_t main() {

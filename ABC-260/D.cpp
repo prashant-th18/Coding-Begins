@@ -22,58 +22,52 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n, k; cin >> n >> k;
+    vector<int> v(n);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
+        --v[i];
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    vector<int> order(n, -1), par(n, -1);
+    set<pair<int, int>> st;
+    for(int i = 0; i < n ; ++i) {
+        if(k == 1) {
+            order[v[i]] = i + 1;
+        }
+        else {
+            auto it = st.lower_bound(pair(v[i], 0));
+            if(it == st.end()) {
+                par[v[i]] = -1;
+                st.insert(pair(v[i], 1));
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                pair<int, int> temp = *it;
+                st.erase(it);
+                par[v[i]] = temp.ff;
+                temp.ff = v[i];
+                ++temp.ss;
+                if(temp.ss == k) {
+                    int t = v[i];
+                    while(t != -1) {
+                        order[t] = i + 1;
+                        t = par[t];
+                    }
+                }
+                else {
+                    st.insert(temp);
+                }
             }
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    for(auto val : order) cout << val << '\n';
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

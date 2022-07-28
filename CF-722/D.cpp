@@ -8,7 +8,7 @@
 // #include <ext/pb_ds/tree_policy.hpp>
 // using namespace __gnu_pbds;
 using namespace std;
-const int MOD = 1000000007;
+const int MOD = 998244353;
 typedef long long ll;
 typedef long double ld;
 #define sz(s) ((int)s.size())
@@ -104,36 +104,24 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    vector<ll> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
+    int n; cin >> n;
+    vector<ll> dp(n + 1, 0);
+    dp[0] = dp[1] = 1;
+    ll sum = 2;
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 2 * i; j <= n; j += i) dp[j]++;
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
-    {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
-            }
-            v = t;
-            n = sz(v);
-        }
+    for(int i = 2; i <= n; ++i) {
+        dp[i] = (dp[i] + sum) % MOD;
+        sum = (sum + dp[i]) % MOD;
     }
+    cout << dp[n];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

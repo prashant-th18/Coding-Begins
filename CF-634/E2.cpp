@@ -22,52 +22,40 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n; cin >> n;
+    vector<int> v(n);
+    vector<vector<int>> dp(n + 1, vector<int>(201, 0)), pos(201);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
+        pos[v[i]].push_back(i);
+        for (int j = 0; j < 201; j++) {
+            dp[i + 1][j] = dp[i][j] + (v[i] == j);
         }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
-        }
-    }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
+    int maxx = -1;
+    for(int i = 1; i <= 200; ++i) {
+        if(sz(pos[i]) == 0) continue;
+        else {
+            int s = 0, e = sz(pos[i]) - 1;
+            while(s <= e) {
+                if(s == e) {
+                    maxx = max(maxx, s + 1 + (sz(pos[i]) - e - 1));
+                }
+                else {
+                    int num = s + 1 + (sz(pos[i]) - e);
+                    int maxi = 0;
+                    for(int j = 1; j <= 200; ++j) {
+                        maxi = max(maxi, dp[pos[i][e]][j] - dp[pos[i][s] + 1][j]);
+                    }
+                    maxx = max(maxx, num + maxi);
+                }
+                ++s, --e;
             }
         }
     }
-    cout << sum;
+    cout << maxx;
     return 0;
 }
 int32_t main() {

@@ -22,58 +22,45 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
+    int n; cin >> n;
     vector<ll> v(n);
-    vector<ll> bits(61, 0);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(n, vector<ll>(2, 0)));
+    // 0 -> maximize
+    // 1 -> minimize
+    for (int si = 1; si <= n; si++) {
+        for (int i = 0; i <= n - si; i++) {
+            int j = i + si - 1;
+            if(si == 1) {
+                dp[i][j][0] = dp[i][j][1] = v[i];
+            }
+            else if(si == 2) {
+                dp[i][j][0] = max(v[i] - v[i + 1], v[i + 1] - v[i]);
+                dp[i][j][1] = min(v[i] - v[i + 1], v[i + 1] - v[i]);
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                // [i, j - 1] -> 0
+                // [i + 1, j] -> 0
+                ll op1 = v[j] + dp[i][j - 1][1];
+                ll op2 = v[i] + dp[i + 1][j][1];
+                dp[i][j][0] = max(op1, op2);
+                op1 = dp[i][j - 1][0] - v[j];;
+                op2 = dp[i + 1][j][0] - v[i];
+                dp[i][j][1] = min(op1, op2);
             }
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    cout << dp[0][n - 1][0];
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

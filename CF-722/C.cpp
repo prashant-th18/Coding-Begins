@@ -22,52 +22,34 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
+int n;
+vector<vector<int>> v;
+vector<array<ll, 2>> a, dp;
+void dfs(int node, int p = -1) {
+    for(const auto& val : v[node]) {
+        if(val != p) {
+            dfs(val, node);
+            dp[node][0] += max(abs(a[node][0] - a[val][0]) + dp[val][0], abs(a[node][0] - a[val][1]) + dp[val][1]);
+            dp[node][1] += max(abs(a[node][1] - a[val][0]) + dp[val][0], abs(a[node][1] - a[val][1]) + dp[val][1]);
+        }
+    }
 }
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
+    cin >> n;
+    a.assign(n + 1, {0, 0});
+    v.assign(n + 1, vector<int>());
+    dp.assign(n + 1, {0, 0});
+    for(int i = 0; i < n; ++i) {
+        cin >> a[i + 1][0] >> a[i + 1][1];
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
-        }
+    for(int i = 0; i < n - 1; ++i) {
+        int aa, b; cin >> aa >> b;
+        v[aa].push_back(b);
+        v[b].push_back(aa);
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    dfs(1);
+    cout << max(dp[1][0], dp[1][1]);
     return 0;
 }
 int32_t main() {

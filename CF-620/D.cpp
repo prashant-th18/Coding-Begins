@@ -22,52 +22,57 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
+deque<int> maxLength(int n, string p) {
+    deque<int> t(n, 0), dq(n, 0);
+    iota(all(dq), 1);
+    for(int i = 0; i < n - 1; ++i) {
+        if(p[i] == '<') {
+            t[i] = dq.front(); dq.pop_front();
+        }
+        else {
+            int j = i, c = 0;
+            while(j < n - 1 && p[j] == '>') ++j;
+            c = j;
+            while(j >= i) {
+                t[j--] = dq.front(); dq.pop_front();
+            }
+            i = c;
+        }
+    }
+    if(sz(dq)) t[n - 1] = dq.front();
+    return t;
 }
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
+deque<int> minLength(int n, string p) {
+    deque<int> t(n, 0), dq(n, 0);
+    iota(all(dq), 1);
+    reverse(all(dq));
+    for(int i = 0; i < n - 1; ++i) {
+        if(p[i] == '>') {
+            t[i] = dq.front(); dq.pop_front();
+        }
+        else {
+            int j = i, c = 0;
+            while(j < n - 1 && p[j] == '<') ++j;
+            c = j;
+            while(j >= i) {
+                t[j--] = dq.front(); dq.pop_front();
+            }
+            i = c;
+        }
+    }
+    if(sz(dq)) t[n - 1] = dq.front();
+    return t;
+}
+void print(deque<int> t) {
+    for(auto val : t) cout << val << ' ';
+    cout << '\n';
 }
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
-    }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
-        }
-    }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
+    int n; cin >> n;
+    string s; cin >> s;
+    print(minLength(n, s));
+    print(maxLength(n, s));
     return 0;
 }
 int32_t main() {

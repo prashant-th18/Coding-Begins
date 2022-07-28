@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -105,29 +105,46 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // *-> KISS*
 int solve() {
     int n, k; cin >> n >> k;
-    vector<ll> v(n);
+    vector<int> v(n);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
+    vector<int> maxx(n, INT_MIN), minn(n, INT_MAX);
+    vector<int> dp(n, INT_MAX);
+    int premax = INT_MAX, premin = INT_MIN;
+    // Base Case
     {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
-            }
-            v = t;
-            n = sz(v);
+        for(int j = 1; j <= k; ++j) {
+            dp[0] = 0;
+            premax = min(premax, v[0] / j);
+            premin = max(premin, v[0] / j);
         }
     }
+    debug(dp[0]);
+    for(int i = 1; i < n; ++i) {
+        int resmax, resmin;
+        bool check = false;
+        for(int j = 1; j <= k; ++j) {
+            // j == 1
+            int num1 = v[i] / j, num2 = v[i] / j;
+            num1 = max(num1, premax);
+            num2 = min(num2, premin);
+            debug(v[i], num1, num2);
+            if(dp[i] < num1 - num2) {
+                continue;
+            }
+            else {
+                dp[i] = num1 - num2;
+                resmax = num1; resmin = num2;
+                check = true;
+            }
+        }
+        if(check) {
+            premax = resmax; premin = resmin;
+        }
+        debug(dp[i], premax, premin);
+    }
+    cout << dp[n - 1];
     return 0;
 }
 int32_t main() {

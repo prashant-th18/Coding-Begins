@@ -22,58 +22,66 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
+int m;
+vector<int> v, t;
+void build(int in = 1, int s = 0, int e = m - 1) {
+    if(s == e) {
+        t[in] = v[s];
+    }
+    else {
+        int mid = midpoint(s, e);
+        build(2 * in, s, mid);
+        build(2 * in + 1, mid + 1, e);
+        t[in] = max(t[2 * in], t[2 * in + 1]);
+    }
 }
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
+int query(int in, int s, int e, int qs, int qe) {
+    if(qs > qe) return INT_MIN;
+    if(s == qs && e == qe) return t[in];
+    int mid = midpoint(s, e);
+    return max(query(2 * in, s, mid, qs, min(qe, mid)), query(2 * in + 1, mid + 1, e, max(mid + 1, qs), qe));
 }
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
-    for (int i = 0; i < n; i++) {
+    int n; cin >> n >> m;
+    v.assign(m, 0);
+    t.assign(4 * m, 0);
+    for (int i = 0; i < m; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    build();
+    int q; cin >> q;
+    while(q--) {
+        int xa, xb, ya, yb;
+        cin >> xa >> ya >> xb >> yb;
+        // x height btara
+        --ya;
+        --yb;
+        int k; cin >> k;
+        // n maximum
+        ll z = ((ll)(n - xa) + k - 1) / k;
+        if(xa + z * k > n) --z;
+        ll h = xa + z * k; // <= n
+        if(ya == yb) {
+            if(abs(xa - xb) % k == 0) cout << "Yes\n";
+            else cout << "No\n";
+        }
+        else {
+            int maxx = query(1, 0, m - 1, min(ya, yb), max(ya, yb));
+            if(h <= maxx || abs(yb - ya) % k != 0 || (h - xb) % k != 0) {
+                cout << "No\n";
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                cout << "Yes\n";
             }
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

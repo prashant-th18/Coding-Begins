@@ -104,36 +104,51 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    vector<ll> v(n);
+    int n, m; cin >> n >> m;
+    vector<int> mini(n), maxi(n);
+    vector<pair<int, int>> p(n);
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
+        cin >> mini[i] >> maxi[i];
+        p[i] = {mini[i], maxi[i]};
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
-    {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
+    sort(p.begin(), p.end());
+    int j = 0, maxx = 1;
+    sort(mini.begin(), mini.end());
+    sort(maxi.begin(), maxi.end());
+    vector<int> s, e;
+    for(int i = 1; i <= m; ++i) {
+        if(maxi[0] < i) break;
+        int ss = maxx, ee = m;
+        int ans = m;
+        while(ss <= ee) {
+            int mid = (ss + ee) / 2;
+            if(mini[n - 1] > mid) {
+                ss = mid + 1;
             }
-            v = t;
-            n = sz(v);
+            else ans = mid, ee = mid - 1;
         }
+        debug(i, ans);
+        // mid .. m
+        s.push_back(ans - i + 1);
+        e.push_back(m - i + 1);
+        while(j < n && p[j].ff == i) {
+            maxx = max(maxx, p[j].ss); ++j;
+        }
+    }
+    sort(s.begin(), s.end());
+    sort(e.begin(), e.end());
+    debug(s, e);
+    for(int i = 1; i <= m; ++i) {
+        int ah = sz(s) - (upper_bound(all(s), i) - begin(s));
+        int bh = (lower_bound(all(e), i) - begin(e));
+        cout << sz(s) - ah - bh << ' ';
     }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

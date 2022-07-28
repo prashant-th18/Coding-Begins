@@ -22,52 +22,57 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
-    vector<ll> v(n);
-    vector<ll> bits(61, 0);
+    int n, m; cin >> n >> m;
+    vector<vector<ll>> a(n, vector<ll>(m, 0)), b(n, vector<ll>(m, 0));
     for (int i = 0; i < n; i++) {
-        cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
+        for (int j = 0; j < m; j++) {
+            cin >> a[i][j];
         }
     }
-    vector<ll> c(n); // Contribute
     for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
-            }
-            else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
-            }
+        for (int j = 0; j < m; j++) {
+            cin >> b[i][j];
         }
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
+    vector<vector<ll>> dp(n + 10, vector<ll>(m + 10, 0));
+    vector<vector<ll>> dpr(n + 10, vector<ll>(m + 10, 0)), dpl(n + 10, vector<ll>(m + 10, 0));
+    for(int i = 0; i < n; ++i) {
+        for(int j = 0; j < m; ++j) {
+            dpl[i + 1][j + 1] = dpl[i][j + 1] + dpl[i + 1][j] + a[i][j] - dpl[i][j];
         }
     }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
+    for(int i = 0; i < n; ++i) {
+        for(int j = m - 1; j >= 0; --j) {
+            dpr[i + 1][j + 1] = dpr[i][j + 1] + dpr[i + 1][j + 2] - dpr[i][j + 2] + b[i][j];
         }
     }
-    cout << sum;
+    ll ans = 0;
+    for(int i = n - 1; i >= 0; --i) {
+        for(int j = 0; j < m; ++j) {
+            dp[i][j] = dpr[i + 1][j + 1] - dpr[i][j + 1] + dpl[i + 1][j] - dpl[i][j] + dp[i + 1][j];
+        }
+        
+    }
+    ans = dp[0][0];
+    {
+        ll t1 = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                t1 += a[i][j];
+            }
+        }
+        ans = max(ans, t1);
+        t1 = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                t1 += b[i][j];
+            }
+        }
+        ans = max(ans, t1);
+    }
+    cout << ans;
     return 0;
 }
 int32_t main() {

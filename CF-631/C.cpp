@@ -102,38 +102,47 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
     #define debug(...) 
 #endif
 
+#define pii pair<int, int>
 // *-> KISS*
 int solve() {
-    int n, k; cin >> n >> k;
-    vector<ll> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
+    int n, m; cin >> n >> m;
+    vector<pii> v(m);
+    for (int i = 0; i < m; i++) {
+        cin >> v[i].ff;
+        v[i].ss = i;
     }
-    sort(v.begin(), v.end());
-    debug(v);
-    return 0;
-    {
-        int cnt = 0;
-        while(cnt++ < 5) {
-            sort(v.begin(), v.end());
-            debug(v);
-            vector<ll> t;
-            for(int i = 0; i < n; ++i) {
-                for(int j = 0; j < n; ++j) {
-                    t.push_back(2 * v[i] - v[j]);
-                }
-                t.push_back(v[i]);
-            }
-            v = t;
-            n = sz(v);
+    vector<int> ans(m, 0);
+    for(int i = 0, c = 0; i < m; ++i, ++c) {
+        int place = n - c;
+        int fir = place - v[i].ff + 1;
+        if(fir <= 0) {
+            cout << -1; return 0;
         }
+        ans[v[i].ss] = fir - 1;
+    }
+    int st = 0;
+    bool flag = (ans[v[m - 1].ss] == 0);
+    for(int i = m - 1; i >= 1; --i) {
+        ans[v[i].ss] = st;
+        int l = st + v[i].ff - 1;
+        if(ans[v[i - 1].ss] <= l + 1) {
+            flag = true;
+            break;
+        }
+        else {
+            st = l + 1;
+        }
+    }
+    if(!flag) cout << -1;
+    else {
+        for(auto val : ans) cout << val + 1 << ' ';
     }
     return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = true;
+    bool test = false;
     int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);

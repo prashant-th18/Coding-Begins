@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 // #pragma GCC optimize("O3")
 // #pragma GCC target("popcnt")
@@ -22,52 +22,39 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 // #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered Set */
 // #define ordered_set tree<ll, null_type,less_equal<ll>, rb_tree_tag,tree_order_statistics_node_update> /* Ordered MultiSet */
 
-ll mul(ll a, ll b) {
-    return (a * b) % MOD;
-}
-ll add(ll a, ll b) {
-    return (a + b) % MOD;
-}
 // *-> KISS*
 int solve() {
-    ll n; cin >> n;
+    int n; cin >> n;
     vector<ll> v(n);
-    vector<ll> bits(61, 0);
     for (int i = 0; i < n; i++) {
         cin >> v[i];
-        for (int j = 0; j < 61; j++) {
-            bits[j] += ((v[i] >> j) & 1);
-        }
     }
-    vector<ll> c(n); // Contribute
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                c[i] = add(c[i], (mul(n, (1LL << j) % MOD)));
+    if(n & 1) {
+        ll ans = 0;
+        for(int i = 1; i < n - 1; i += 2) {
+            ll maxx = max(v[i - 1], v[i + 1]);
+            ll diff = max(maxx - v[i] + 1, 0LL);
+            ans += diff;
+        }
+        cout << ans;
+    }
+    else {
+        ll very = 1000000000000000LL;
+        vector<array<ll, 2>> dp(n + 10, {very, very});
+        for(int i = n - 2; i >= 1; --i) {
+            ll maxx = max(v[i - 1], v[i + 1]);
+            ll diff = max(maxx - v[i] + 1, 0LL);
+            if(i == n - 2 || i == n - 3) {
+                dp[i][0] = diff;
+                dp[i][1] = diff;
             }
             else {
-                c[i] = add(c[i], (mul(bits[j], (1LL << j) % MOD)));
+                dp[i][0] = diff + dp[i + 2][0];
+                dp[i][1] = min(dp[i + 2][1] + diff, diff + dp[i + 3][0]);
             }
         }
+        cout << min({dp[1][0], dp[1][1], dp[2][0]});
     }
-    // Contribution Code done
-    vector<ll> ans(61, 0);
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < 61; ++j) {
-            if((v[i] >> j) & 1) {
-                ans[j] = add(ans[j], c[i]);
-            }
-        }
-    }
-    ll sum = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 61; j++) {
-            if((v[i] >> j) & 1) {
-                sum = add(sum, mul(ans[j], (1LL << j) % MOD));
-            }
-        }
-    }
-    cout << sum;
     return 0;
 }
 int32_t main() {
