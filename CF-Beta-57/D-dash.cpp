@@ -11,59 +11,50 @@ typedef long double ld;
 #define ff first
 #define ss second
 using pll = pair<ll, ll>;
+
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-int n, m;
+int n;
 vector<vector<pll>> v;
 vector<bool> vis;
-vector<int> col;
-vector<int> ans;
-bool check(int node, int c = 0) {
-    col[node] = c;
+ll optimal(int node) {
     vis[node] = true;
-    for(const auto& [val, _] : v[node]) {
-        if(!vis[val] && !check(val, 1 - c)) return false;
-        if(vis[val] && col[node] == col[val]) return false;
-    }
-    return true;
-}
-void dfs(int node, int c = 0) {
-    vis[node] = true;
-    for(const auto& [val, in] : v[node]) {
+    vector<ll> order;
+    for(const auto& [val, y] : v[node]) {
         if(!vis[val]) {
-            if(in < 0) ans[-in] = 1 - c;
-            else ans[in] = c;
-            dfs(val, 1 - c);
-        }
-        else {
-            int t = abs(in);
-            if(ans[t] != -1) continue;
-            else {
-                if(in < 0) ans[t] = 1 - c;
-                else ans[t] = c;
-            }
+            order.push_back(optimal(val) + y);
         }
     }
+    if(node != 1) return accumulate(all(order), 0LL);
+    if(sz(order) == 0) return 0;
+    sort(order.begin(), order.end());
+    return 2 * accumulate(order.begin(), order.begin() + sz(order), 0LL);
+}
+ll maxx = -1;
+void getMax(int node, ll s = 0) {
+    vis[node] = true;
+    for(const auto& [val, y] : v[node]) {
+        if(!vis[val]) {
+            getMax(val, s + y);
+        }
+    }
+    maxx = max(maxx, s);
 }
 // *-> KISS*
 int solve() {
-    cin >> n >> m;
+    cin >> n;
     v.assign(n + 1, vector<pll>());
     vis.assign(n + 1, false);
-    col.assign(n + 1, 0);
-    ans.assign(m + 1, -1);
-    for (int i = 1; i <= m; i++) {
-        int a, b; cin >> a >> b;
-        v[a].push_back(pll(b, i));
-        v[b].push_back(pll(a, -i));
+    for (int i = 0; i < n - 1; i++) {
+        int a, b, c; cin >> a >> b >> c;
+        v[a].push_back(pll(b, c));
+        v[b].push_back(pll(a, c));
     }
-    if(check(1) == false) cout << "NO";
-    else {
-        cout << "YES\n";
-        vis.assign(n + 1, false);
-        dfs(1);
-        for(int i = 0; i < m; ++i) cout << ans[i + 1];
-    }
+    // Rooted at 1
+    ll a1 = optimal(1);
+    vis.assign(n + 1, false);
+    getMax(1);
+    cout << a1 - maxx;
     return 0;
 }
 int32_t main() {

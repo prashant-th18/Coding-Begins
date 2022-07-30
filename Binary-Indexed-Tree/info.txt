@@ -1,0 +1,2 @@
+Rightmost set bit of x => x & -x
+To remove the rightmost set bit of x => x - (x & -x)
