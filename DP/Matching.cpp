@@ -1,55 +1,65 @@
-#include<bits/stdc++.h>
-using namespace std;
-using ll = long long;
-const ll MOD = 1000000007;
+#ifdef LOCAL
+	#define _GLIBCXX_DEBUG
+	#include "debug.h"
+#else
+	#include "bits/stdc++.h"
+	using namespace std;
+	typedef long long ll;
+	#define sz(s) ((int)s.size())
+	#define all(v) begin(v), end(v)
+	#define debug(...)
+#endif
 
-int n;
-vector<vector<int>> v, orig;
-map<vector<vector<int>>, ll> mp;
-vector<bool> vis;
-ll add(ll &a, ll b) {
-    return (a + b) % MOD;
+typedef long double ld;
+const int MOD = 1000000007;
+#define ff first
+#define ss second
+
+mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+// *-> KISS*
+int solve() {
+    int n; cin >> n;
+	vector<vector<int>> v(n, vector<int>(n, 0));
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> v[i][j];
+		}
+	}
+	vector<int> dp(1 << n);
+	dp[0] = 1;
+	for (int i = 1; i < (1 << n); i++) {
+		int bits = __builtin_popcount(i);
+		for (int j = 0; j < n; j++) {
+			if((i & (1 << j)) && v[bits - 1][j]) {
+				dp[i] += dp[i ^ (1 << j)];
+				dp[i] %= MOD;
+			}
+		}
+	}
+	cout << dp[(1 << n) - 1];
+	return 0;
 }
-/*
-void make0(int i, int j) {
-    for(int k = 0; k <= j; ++k) v[i][k] = 0;
-}
-void make1(int i, int j) {
-    for(int k = 0; k <= j; ++k) {
-        v[i][k] = orig[i][k];
-    }
-}
-*/
-ll fun(int index) {
-    if(index < 0) return 1;
-    vector<vector<int>> t(n, vector<int>(index + 1, 0));
-    for(int i = 0; i < n; ++i) {
-        for(int j = 0; j <= index; ++j) {
-            t[i][j] = v[i][j];
+int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    bool test = false;
+	int TET = 1;
+    if(test) cin >> TET;
+    cout << fixed << setprecision(6);
+    for (int i = 1; i <= TET; i++) {
+		#ifdef LOCAL
+        	cout << "##################" << '\n';
+		#endif
+
+        if (solve()) {
+            break;
         }
+        cout << '\n';
     }
-    if(mp.count(t)) return mp[t];
-    ll ans = 0;
-    for(int i = 0; i < n; ++i) {
-        if(v[i][index] == 1 && !vis[i]) {
-            vis[i] = true;
-            ans = add(ans, fun(index - 1));
-            vis[i] = false;
-        }
-    }
-    cerr << ans << endl;
-    return mp[t] = ans;
+	#ifdef LOCAL
+    	cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+	#endif
+	return 0;
 }
-int main() {
-    cin >> n;
-    v.assign(n, vector<int>(n, 0));
-    vis.assign(n, false);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cin >> v[i][j];
-        }
-    }
-    orig = v;
-    cout << fun(n - 1);
-    return 0;
-}
+// -> Keep It Simple Stupid!

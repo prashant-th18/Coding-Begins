@@ -1,0 +1,10 @@
+[
+	{
+		"correct_answers":
+		[
+			"NO\nYES\nYES",
+			"##################\nNO\n##################\nYES\n##################\nYES\n\nfinished in 0.027242 sec"
+		],
+		"test": "3\n2\n1 1 1 1\n3\n1 1 2 2 3 3\n2\n1 1 2 2\n"
+	}
+]

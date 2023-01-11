@@ -1,0 +1,31 @@
+[
+	{
+		"correct_answers":
+		[
+			"YES\nYES\nNO\nNO\nNO\nYES"
+		],
+		"test": "6\n3\nWBB\nBBW\n1\nB\nB\n5\nBWBWB\nBBBBB\n2\nBW\nWB\n5\nBBBBW\nBWBBB\n6\nBWBBWB\nBBBBBB\n"
+	},
+	{
+		"test": "1\n6\nBBBBBB\nBBBBBB\n"
+	},
+	{
+		"correct_answers":
+		[
+			"##################\nNO\n\nfinished in 0.023599 sec"
+		],
+		"test": "1\n6\nBWBWBW\nWBWBWB\n"
+	},
+	{
+		"test": "1\n6\nBBBBBW\nBBBBBW\n"
+	},
+	{
+		"test": "1\n6\nBBBBBW\nBBBBBW\n"
+	},
+	{
+		"test": "1\n1\nB\nB\n"
+	},
+	{
+		"test": "2\n1\nB\nW\n1\nW\nB\n"
+	}
+]

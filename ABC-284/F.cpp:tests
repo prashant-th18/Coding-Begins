@@ -1,0 +1,94 @@
+[
+	{
+		"correct_answers":
+		[
+			"abc\n2"
+		],
+		"test": "3\nabcbac\n"
+	},
+	{
+		"correct_answers":
+		[
+			"abab\n1",
+			"abab\n3"
+		],
+		"test": "4\nabababab\n"
+	},
+	{
+		"correct_answers":
+		[
+			"cga\n0"
+		],
+		"test": "3\nagccga\n"
+	},
+	{
+		"correct_answers":
+		[
+			"-1"
+		],
+		"test": "4\natcodeer\n"
+	},
+	{
+		"correct_answers":
+		[
+			"baaaaa\n0"
+		],
+		"test": "6\naaaaabbaaaaa\n"
+	},
+	{
+		"correct_answers":
+		[
+			"aaaaaa\n5"
+		],
+		"test": "6\naaaaaaaaaaaa\n"
+	},
+	{
+		"correct_answers":
+		[
+			"abcd\n2"
+		],
+		"test": "4\nabdcbacd\n"
+	},
+	{
+		"correct_answers":
+		[
+			"edcba\n0"
+		],
+		"test": "5\nabcdeedcba\n"
+	},
+	{
+		"correct_answers":
+		[
+			"a\n0"
+		],
+		"test": "1\naa\n"
+	},
+	{
+		"correct_answers":
+		[
+			"-1"
+		],
+		"test": "1\nab\n"
+	},
+	{
+		"correct_answers":
+		[
+			"ba\n0"
+		],
+		"test": "2\nabba\n"
+	},
+	{
+		"correct_answers":
+		[
+			"aa\n1"
+		],
+		"test": "2\naaaa\n"
+	},
+	{
+		"correct_answers":
+		[
+			"acc\n0"
+		],
+		"test": "3\nccaacc\n"
+	}
+]

@@ -1,0 +1,64 @@
+#####
+Prefix Function (pref)
+pref(S) -> max. length string which is both prefix and suffix of S,but is not equal to S.
+
+pref(abbab): ab
+pref(ababa): aba
+
+
+Assume a string S,
+S = ......................
+We want to know all the strings which are prefix as well as suffix of string S.
+So,
+- pref(S) will give the maximum length for that
+For the next one,
+- pref(pref(S)) will give the maximum after that and so on.
+For the next one,
+- pref(pref(pref(S)))
+
+
+Assume a string S, let's build prefix function for this
+P[i] -> pref(S[0 .. i - 1])
+
+	S =   abbaabbab
+	P = -1000112342
+
+For P,
+Index -> 0123456789
+
+Now, assume that, I want to calculate the prefix function for prefix till "i"
+Let's think till "i - 1", and assume that s[i] = x
+
+Now I want a prefix such that it is also a suffix of string[0 .. i - 1]
+and who has character "x" after the prefix
+
+So, I will check for P[i - 1], that is it the case that character "x" is placed after the maximum prefix length.
+If Yes, GOOD.
+Otherwise, 
+check for P[P[i - 1]], and so on.
+
+
+Algorithm:
+
+p[0] = -1
+for i = 1 .. n:
+	k = p[i - 1]
+	while k >= 0 and s[k] != s[i - 1]:
+		k = p[k]
+		
+	p[i] = k + 1
+
+The Time Complexity of this algorithm is Linear O(N)
+
+
+#####
+How to search a string "S" in some other string "T"
+T = ..................
+S = ...... Length = m
+
+Make a new string 
+Z = S + "#" + T (# is used as we consider that # will not be in S or T)
+
+And find the prefix function for this
+For all those indices where the length of prefix function is "m" are the points
+where the substrings match string "S".

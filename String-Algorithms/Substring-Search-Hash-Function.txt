@@ -1,0 +1,75 @@
+#####
+Two Strings
+String "T"
+String "S"
+
+We want to find whether S exists as a substring in string "T" or not.
+
+--------Hashes:
+A hash function takes an string as a input, and returns a number.
+Main Purpose of Hash Function is:
+
+Hash(A) != Hash(B) => A != B
+
+An ideal hash function is the one in which:
+1. Collisions (Hash(A) == Hash(B), BUT, A != B) is small
+2. Hash function can be recalculated easily
+
+Suppose, we have a string
+S = S_0 S_1 S_2 ... S_n-1
+
+Hash(S) = (S_0 * X^(n - 1) + S_1 * X^(n - 2) + ... + S_(n-1) * X^(0)) % M
+where,
+M = random big prime
+X = random big number [0, M - 1]
+
+The probability that, two strings are not equal but their hashes are, is:
+P <= n / M
+
+
+-------How to recalculate hash function? (Hash Function always uses Modulo arithmetic)
+
+H = Hash(T[i ... i + m - 1]);
+H' = Hash(T[i + 1 ... i + m]);
+
+or 
+
+H = T[i] * X^(m-1) + T[i + 1] * X^(m - 2) + ... + T[i + m - 1] * X^(0)
+H' = T[i + 1] * X^(m-1) + T[i + 2] * X^(m - 2) + ... + T[i + m] * X^(0)
+
+=> H' = H * X - (T[i] * X^(m)) + T[i + m]
+
+
+Coming back to our main question:
+HS = Hash(S)
+H = Hash(T[0 .. m - 1])
+
+for i = 0 .. n - m:
+	if H = HS:
+		if T[i .. i + m - 1] == S:
+			return i
+	
+	H = (H * X - (T[i] * X^(m)) + T[i + m]) % M
+	
+	
+#####
+How to check whether two sub-strings are same or not?
+S = ..................
+
+We will first build prefix function, where
+P[i] = hash(S[0 .. i])
+
+and P[i + 1] = P[i] * X + S[i + 1];
+
+hash(l, r) = hash(S[l .. r]) = P[r] - P[l - 1] * X^(r - l + 1)
+
+
+BUT REMEMBER, THIS ALGO USES MAGIC (USES RANDOM NUMBERS)
+SO, SOMETIME, IT MAY WORK, SOMETIME, IT WILL NOT!
+
+
+################ For USE:
+X -> 31 (when only lowercase)
+	 53 (when uppercase as well)
+	 
+M -> 1e9 + 9

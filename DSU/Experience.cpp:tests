@@ -1,0 +1,11 @@
+[
+	{
+		"correct_answers":
+		[
+			"150\n0\n50",
+			"##################\n150\n0\n50\n\n\nfinished in 0.020321 sec",
+			"##################\n150\n0\n50\n\n\nfinished in 0.020269 sec"
+		],
+		"test": "3 6\nadd 1 100\njoin 1 3\nadd 1 50\nget 1\nget 2\nget 3\n"
+	}
+]

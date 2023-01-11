@@ -1,0 +1,16 @@
+[
+	{
+		"correct_answers":
+		[
+			"1\n2\n2"
+		],
+		"test": "3\n4\nabab\n6\nabccda\n4\naaaa\n"
+	},
+	{
+		"correct_answers":
+		[
+			"2"
+		],
+		"test": "1\n6\naaaaab\n"
+	}
+]

@@ -20,7 +20,7 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 const int N = 20;
 int n, m;
 vector<vector<int>> v;
-int dp[(1 << N)][N];
+/*
 void add(int& a, int b) {
     a = (a % MOD + b % MOD) % MOD;
 }
@@ -43,7 +43,7 @@ int func(int mask, int node) {
     return dp[mask][node];
 }
 // *-> KISS*
-int solve() {
+int SOLVE() {
     for(int i = 0; i < (1 << N); ++i) {
         for(int j = 0; j < N; ++j) dp[i][j] = -1;
     }
@@ -55,6 +55,31 @@ int solve() {
         v[a].push_back(b);
     }
     cout << func(0, 0);
+    return 0;
+}
+*/
+int solve() {
+    cin >> n >> m;
+    v.assign(n + 1, vector<int>());
+    for(int i = 0; i < m; ++i) {
+        int a, b; cin >> a >> b;
+        v[b].push_back(a);
+    }
+    vector<vector<int>> dp(1 << (n + 1), vector<int>(n + 1, 0));
+    dp[1][1] = 1;
+    for(int mask = 2; mask < (1 << n); ++mask) {
+        if(mask & (1 << (n - 1)) && !(mask == (1 << n) - 1)) continue;
+        for(int i = 1; i <= n; ++i) {
+            if(!(mask & (1 << (i - 1)))) continue;
+            for(const auto& val : v[i]) {
+                if(mask & (1 << (val - 1))) {
+                    dp[mask][i] += dp[mask ^ (1 << (i - 1))][val];
+                    dp[mask][i] %= MOD;
+                }
+            }
+        }
+    }
+    cout << dp[(1 << n) - 1][n] % MOD;
     return 0;
 }
 int32_t main() {

@@ -1,0 +1,23 @@
+#####
+String "S"
+S = ..................
+
+Z[i] = max k: S[0 .. k - 1] = S[i .. i + k - 1]
+
+Algo:
+
+l = 0; // Stores index whose l + z[l] is maximum possible
+for i = 1 .. n - 1
+	z[i] = min(z[i - l], l + z[l] - i)
+	z[i] = max(z[i], 0)
+	
+	while S[z[i]] = S[i + z[i]]
+		z[i]++
+	
+	if i + z[i] > l + z[l]:
+		l = i
+		
+Suppose, we want to find string "S" in string "T"
+
+- Make new string: S + "#" + T
+Find indices in function z in which z[i] = size of string "S"

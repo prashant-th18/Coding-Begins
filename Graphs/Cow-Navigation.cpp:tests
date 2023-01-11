@@ -1,0 +1,11 @@
+[
+	{
+		"correct_answers":
+		[
+			"##################\n9\n\nfinished in 0.017817 sec",
+			"9",
+			"##################\n9\n\nfinished in 0.022308 sec"
+		],
+		"test": "3\nEHE\nEEE\nEEE\n"
+	}
+]

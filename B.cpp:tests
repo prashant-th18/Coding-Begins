@@ -1,0 +1,16 @@
+[
+	{
+		"correct_answers":
+		[
+			"adeftnzq"
+		],
+		"test": "oqadeftnzq 8\n"
+	},
+	{
+		"correct_answers":
+		[
+			"chjs"
+		],
+		"test": "tuhchjs 4\n"
+	}
+]

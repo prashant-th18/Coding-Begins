@@ -1,0 +1,52 @@
+When we have to use Segment Tree, the operation we apply on the elements,
+need to be "Associative"
+which means, (a + b) + c = a + (b + c)
+
+Suppose, I want to do two operations,
+
+add(l, r, v) : Add v to the segment [l .. r]
+get(i): get the value of array at index "i"
+
+So, these all operations can be done in O(logN) time.
+
+And the "+" operation is "Commutative" as well,
+which means (a + b + c) = (a + c + b)
+
+Since, this is the case, So, the order in which the add operation is done,
+doesn't matter at all.
+
+BUT.........
+What if the operation is not commutative??
+The eg is the "=" operator.
+Like,
+
+set(l, r, v): set the value of all indices from [l .. r] = v
+
+In this case, we need to preserve the order in which the set operation is done.
+
+Now, we need to do the lazy propagation.
+
+Since, whenever use the get operation, we start from the index, and 
+move towards the "root".
+
+So,
+
+=> Root -> Node -> Node -> Node -> Index (i) (Suppose, this is our segtree structure)
+
+Suppose, our first operation does this.
+
+=> Root -> x -> Node -> Node -> Index (i)
+
+So, if we do the get operation from index "i", we will get the value x
+
+Suppose second does this,
+
+=> Root -> x -> Node -> y -> Index (i)
+
+If we keep our structure as it is, then the final value we will get from index "i" will be x.
+
+But, here, we will do lazy propagation (Because assignment is not commutative)
+
+=> Root -> Node -> Node -> y -> Index (i)
+
+So, operator used is not "Commutative" => There will be lazy propagation

@@ -1,25 +1,60 @@
-#include<bits/stdc++.h>
-using namespace std;
-const int N = (int)1e6 + 1;
-int main() {
+#ifdef LOCAL
+	#define _GLIBCXX_DEBUG
+	#include "debug.h"
+#else
+	#include "bits/stdc++.h"
+	using namespace std;
+	typedef long long ll;
+	#define sz(s) ((int)s.size())
+	#define all(v) begin(v), end(v)
+	#define debug(...)
+#endif
+
+typedef long double ld;
+const int MOD = 1000000007;
+#define ff first
+#define ss second
+
+mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+
+// *-> KISS*
+int solve() {
     int n; cin >> n;
-    vector<int> occ(N, 0);
-    for (int i = 0; i < n; i++) {
-        int t; cin >> t;
-        for(int j = 1; j * j <= t; ++j)
-        {
-            if(t % j == 0)
-            {
-                occ[j]++;
-                if(j != t / j) occ[t / j]++;
-            }
-        }
-    }
-    for(int i = N - 1; i >= 1; --i)
-    {
-        if(occ[i] > 1)
-        {
-            cout << i; return 0;
-        }
-    }
+	vector<int> v(n);
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+	vector<int> pre(1e6 + 1);
+	for(int i = 0; i < n; ++i) pre[v[i]]++;
+	int ans = 1;
+	for(int i = 2; i < 1e6 + 1; ++i) {
+		int c = 0;
+		for(int j = i; j < 1e6 + 1; j += i) c += pre[j];
+		if(c >= 2) ans = i;
+	}
+	cout << ans;
+	return 0;
 }
+int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    bool test = false;
+	int TET = 1;
+    if(test) cin >> TET;
+    cout << fixed << setprecision(6);
+    for (int i = 1; i <= TET; i++) {
+		#ifdef LOCAL
+        	cout << "##################" << '\n';
+		#endif
+
+        if (solve()) {
+            break;
+        }
+        cout << '\n';
+    }
+	#ifdef LOCAL
+    	cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+	#endif
+	return 0;
+}
+// -> Keep It Simple Stupid!
