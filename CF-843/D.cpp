@@ -59,6 +59,7 @@ int solve() {
     		mp[val].insert(i);
     	}
     }
+    
     int s, t; cin >> s >> t;
     vector<int> par(n + 1, -1);
     vector<bool> vis(N + 1, false);
