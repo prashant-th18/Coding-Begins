@@ -1,5 +1,5 @@
 #ifdef LOCAL
-    #define _GLIBCXX_DEBUG
+	#define _GLIBCXX_DEBUG
 #endif
 #include "bits/stdc++.h"
 using namespace std;
@@ -16,38 +16,45 @@ mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
 // *-> KISS*
 int solve() {
-    ll n, w, h; cin >> n >> w >> h;
-    vector<ll> a(n);
-    for(int i = 0; i < n; ++i) cin >> a[i];
-        
-    vector<ll> b(n);
+    int n; cin >> n;
+    vector<ll> v(n);
+    ll sum = 0;
     for(int i = 0; i < n; ++i) {
-        cin >> b[i];
+    	cin >> v[i];
+    	sum += v[i];
     }
-    // Kitna Right krr skta hun
-    {
-        
+    ll ans = sum;
+    sort(all(v));
+    ll cnt = 1;
+    sum = 0;
+    for(int i = 0; i < n; ++i) {
+    	// WE want to make this equal to "cnt"
+    	if(v[i] - cnt >= 0) {
+    		sum += v[i] - cnt;
+    		++cnt;
+    	}
     }
-    return 0;
+    cout << min(ans, sum);
+	return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    int TET = 1;
+	int TET = 1;
     cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
-        #ifdef LOCAL
-            cout << "##################" << '\n';
-        #endif
+		#ifdef LOCAL
+        	cout << "##################" << '\n';
+		#endif
         if (solve()) {
             break;
         }
         cout << '\n';
     }
-    #ifdef LOCAL
-        cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
-    #endif
-    return 0;
+	#ifdef LOCAL
+    	cout << endl << "finished in " << clock() * 1.0 / CLOCKS_PER_SEC << " sec" << endl;
+	#endif
+	return 0;
 }
 // -> Keep It Simple Stupid!
