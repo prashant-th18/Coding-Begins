@@ -1,0 +1,9 @@
+[
+	{
+		"correct_answers":
+		[
+			"0\n2\n2 w 3 i\n3 w 1 n\n3\n2 w 3 i\n2 w 4 n\n3 i 4 n"
+		],
+		"test": "3\n2\nnwi\ninw\n3\ninn\nnww\nwii\n4\nwin\nwww\niii\nnnn\n"
+	}
+]
