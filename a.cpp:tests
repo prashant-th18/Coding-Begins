@@ -2,15 +2,15 @@
 	{
 		"correct_answers":
 		[
-			"50"
+			"Lose Win Win Loop\nLoop Win Win Win"
 		],
-		"test": "2 4 50\n20 100\n60 10 40 80\n"
+		"test": "5\n2 3 2\n3 1 2 3\n"
 	},
 	{
 		"correct_answers":
 		[
-			"7"
+			"Win Win Win Win Win Win Win\nLose Win Lose Lose Win Lose Lose"
 		],
-		"test": "1 2 10\n11\n15 7\n"
+		"test": "8\n4 6 2 3 4\n2 3 6\n"
 	}
 ]
