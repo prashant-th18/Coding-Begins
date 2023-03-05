@@ -1,9 +1,0 @@
-[
-	{
-		"correct_answers":
-		[
-			"5\nGHHGG\n3\n.GH.G\n2\n..GH.\n2\n...GH\n2\n...HG\n2\nHG"
-		],
-		"test": "6\n5 0\nGHHGG\n5 1\nGHHGG\n5 2\nGHHGG\n5 3\nGHHGG\n5 4\nGHHGG\n2 1\nGH\n"
-	}
-]

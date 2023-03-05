@@ -1,0 +1,9 @@
+You've got a string s = s1s2... s|s| of length |s|, consisting of lowercase English letters. There also are q 
+queries, each query is described by two integers li, ri (1 ≤ li ≤ ri ≤ |s|). 
+
+The answer to the query is the number of subsequences modulo MOD of string s[li... ri], which are palindromes.
+
+Input:
+The first line contains string s (1 ≤ |s| ≤ 5000). The second line contains a single integer q (1 ≤ q ≤ 10^6) — the number of queries. Next q lines contain the queries. The i-th of these lines contains two space-separated integers li, ri (1 ≤ li ≤ ri ≤ |s|) — the description of the i-th query.
+
+It is guaranteed that the given string consists only of lowercase English letters.

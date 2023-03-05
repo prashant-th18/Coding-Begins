@@ -1,0 +1,10 @@
+Suppose you are given an array of size n containing integers from -1e9 to 1e9.
+You are initially at the first index of the array. In one move, you can make a jump from your current
+index to a next index if the difference between the two indices is a power of two (i.e. 
+(nindex - pindex == 2^t) where t >= 0)
+Your task is to reach index "n" in some number of jumps in such a way that your visited sum should be 
+maximum as possible.
+
+Visited Sum:
+Suppose the indices on which you jumped to reach index "n" (including n and "1") are t1, t2, ... tk
+Then Visited Sum = a[t1] + a[t2] + ... + a[tk]

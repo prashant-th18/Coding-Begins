@@ -1,0 +1,6 @@
+Farmer John's cows have grown tired of his daily request that they sort themselves before leaving the barn each morning. They have just completed their PhDs in quantum physics, and are ready to speed things up a bit.
+This morning, as usual, Farmer John's N cows (1≤N≤105), conveniently numbered 1…N, are scattered throughout the barn at N distinct locations, also numbered 1…N, such that cow i is at location pi. But this morning there are also M wormholes (1≤M≤105), numbered 1…M, where wormhole i bidirectionally connects location ai with location bi, and has a width wi (1≤ai,bi≤N,ai≠bi,1≤wi≤109).
+
+At any point in time, two cows located at opposite ends of a wormhole may choose to simultaneously swap places through the wormhole. The cows must perform such swaps until cow i is at location i for 1≤i≤N.
+
+The cows are not eager to get squished by the wormholes. Help them minimize the width of the least wide wormhole which they must use to sort themselves. It is guaranteed that it is possible for the cows to sort themselves.

@@ -1,0 +1,53 @@
+You are given an array of `n`(1 <= n <= 1e5) distinct prime numbers.
+You will be given `q`(1 <= q <= 1e5) queries. In each query, you will be given an integer `k` (k <= 1e7), and you want to count the number of perfect factors of the factors of this number.
+i.e. 
+Suppose the factors of the number `k` are: a_0 a_1 a_2 .. (may be sorted)
+Let's consider one of the factor of this number:
+a_i = t (suppose)
+
+Now, we have to check how many elements of the given array perfectly divides this number.
+We have to check the same thing for all the other factors of the number `k` and the sum of their answer is the final answer for their query.
+
+For eg:
+Array: [2, 3]
+Query : [6]
+
+Answer:
+Factors of 6 are: 1, 2, 3, 6
+Number of elements of Array that divides 1 are : 0
+                          ...    divides 2 are : 1
+                          ...    divides 3 are : 1
+                          ...    divides 6 are : 2
+Answer: 0 + 1 + 1 + 2 => 4
+
+SOLUTION:
+
+First, using the concept of smallest prime factor, we can convert our given number into pairs of (prime number, highest power of this prime number in the number)
+
+
+Like: 6 => { (2, 1), (3, 1) } // -> 6 = 2^1 * 3^1
+Using this https://cp-algorithms.web.app/algebra/divisors.html#number-of-divisors
+We can easily calculate the total number of divisors.
+
+But As we saw in 6, this d(n) = (1 + 1) * (1 + 1) => 4
+So, how can we calculate the number of factors which are perfectly divisible by `2`?
+
+So, all those factors which include at least '1' power of 2 are perfectly divisble by 2. But how to know them?
+While calculating d(n) for '6', we did ->
+d(n) = (1 + a) * (1 + b), where a -> power of '2', b -> power of '3'
+
+So, if I take one '2' from this number, d(n) will be equal to -> (1 + (a - 1)) * (1 + b)
+And these d(n) are all those numbers which are divisible by '2'
+
+In simple words,
+Suppose, prime factorization of query number is p^e1 * q^e2 * .. * z^e_k
+So, total number of divisors are: (e1 + 1) * (e2 + 1) * ... * (ek + 1)
+Now, we can iterate over [p, q, ... z] and check if any of them exists in the given array or not
+If it exists, then we can write our query number as p * (p^(e1 - 1) * q^e2 .. z^e_k)
+So, total number of factors of number enclosed in braces above are : (e1 - 1 + 1) * (e2 + 1) ....
+These all factors will be divisible by "p"
+And in this way, we can get this result for all prime numbers and get our final answer
+
+Time Complexity:
+
+q*log(k) -> Another log factor may get excluded if a unordered_map is used

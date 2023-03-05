@@ -1,0 +1,76 @@
+First Of all, take the input of the number as a string because no number data-type is able to correctly
+store such a huge number.
+
+Suppose 
+s = a_0 a_1 a_2 a_3 ... a_(n - 1) {123 => a_0 = 1, a_1 = 2, a_2 = 3, and there is no space between them}
+
+Suppose, we take a number ----->     a_i {0 <= i <= n - 1}
+
+Assume a number ( t = n - 1 - i )
+
+Assume two ranges left = [0, i - 1] and right = [i + 1, n - 1]
+
+Case 1:
+Okay, suppose I don't remove any number from the right range, how will a_i contribute in the decimal
+representation of our number, i.e. {in 1234, 2 will contribute as --> 2 * (10 ^ 2)}
+
+or in general terms, a_i will in case 1 will contri as a_i*(10 ^ t)
+
+Now think, how the left range can contri in this answer. 
+See that, whether I remove any number from left range or not, the power of 10, a_i will be the same.
+{1234, before removing 1, 2 has a power of 2(10^ 2) in decimal representation, and after removing 1, 
+it is the same}
+
+**C(n, r) means Combining r numbers from n.
+So, I can remove 1 number from left range i.e. -> C(i, 1)
+    ..
+    I can remove i numbers from left range i.e. -> C(i, i)
+
+    Why I can't remove 0 number from left range?
+    Because, If I do this, then there is zero number that is removed from the whole number given in 
+    the input, which violates the condition given in the problem.
+
+So what is the total number of ways from left range? -> C(i, 1) + .. C(i, i) = 2^(i) - 1
+
+So total ways is -> ((2^i) - 1) * (a_i) * (10^ t)
+
+Case 2:
+Suppose, I remove some numbers from the right range.
+-> I removed one number from the right range => Ways -> C(t, 1)
+Okay, now how a_i will contri in the whole number -> a_i*(10^(t - 1))
+eg. {in 1234, if i remove 4, then it will become 123, so now 2 will contri as 2 * (10^ 1), but before 
+removing, it was contributing as 2 * (10 ^ 2)}
+
+So from the right range I can get total answer as C(t, 1) * a_i * (10^(t - 1))
+
+What about left range?
+
+It is similiar to Case 1 left range, but now we can also consider the case, when we remove 0 digit from left
+range as at-least one number is removed from the right range.
+
+So left range is contributing as C(i, 0) + C(i, 1) + C(i, 2) + .. + C(i, i) =  2^i
+
+So, total number of ways  is -> 2^i * (C(t, 1) * a_i * 10^(t - 1))
+
+But this is only for the case, when only one number is removed.
+So for all cases where we remove numbers from 1 for t, final answer becomes ->
+
+2^i * (C(t, 1) * a_i * 10^(t - 1)) + 2^i * (C(t, 2) * a_i * 10^(t - 2)) + ... + 2^i * (C(t, t) * a_i * 10^(t - t))
+
+=> 2^i * (C(t, 1) * a_i * 10^(t - 1) + .. + C(t, t) * a_i * 10^0) ====> This is the final answer for Case 2
+
+Now add Case 1 + Case 2
+
+-> (2^(i) - 1) * a_i * (10^t) + 2^i * (C(t, 1) * a_i * 10^(t - 1) + .. + C(t, t) * a_i * 10^0)
+
+This equation can be changed to ->
+
+-> a_i * ((C(t, 0) * 10^t + C(t, 1) * 10^(t - 1) + .. + C(t, t) * 10^(0)) * (2^i) - C(t, 0) * (10^t))
+
+which is equal to->
+
+a_i * (((1 + 10) ^ t) * (2^i) - 10^t)
+
+=> a_i * ((11^t) * (2^i) - (10^t))
+
+Compute this for every i, and add to answer and print it! You made it! :yayy:
