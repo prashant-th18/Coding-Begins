@@ -14,53 +14,46 @@ const int MOD = 1000000007;
 
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-const int M = 1000;
+int n;
+vector<vector<int>> dp;
+string s, t;
+int dfs(int i, int j) {
+	if(dp[i][j] != -1) return dp[i][j];
+	if(i > j) return 1;
+
+	if(i == j) {
+		return dp[i][j] = (s[i] == t[i]);
+	}
+	char a1 = s[i], a2 = t[i], b1 = s[j], b2 = t[j];
+	if(a1 == a2) {
+		dp[i][j] = max(dp[i][j], dfs(i + 1, j));
+	}
+	if(b1 == b2) {
+		dp[i][j] = max(dp[i][j], dfs(i, j - 1));
+	}
+	dp[i][j] = max(dp[i][j], 0);
+	return dp[i][j];
+}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-	vector<int> a(n), c(n);
-	for(int i = 0; i < n; ++i) {
-		cin >> a[i];
-	}
-	for(int i = 0; i < n; ++i) {
-		cin >> c[i];
-	}
-	vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
-	for(int i = 0; i <= M; ++i) {
-		dp[0][i] = 1;
-	}
-	for(int i = 1; i <= n; ++i) {
-		/* if(i == 1) { */
-		/* 	for(int j = 1, cc = 0; j <= M; ++j) { */
-		/* 		if(a[i - 1] <= j && j <= c[i - 1]) ++cc; */
-		/* 		dp[i][j] = cc; */
-		/* 	} */
-		/* 	continue; */
-		/* } */
-		for(int j = 1; j <= M; ++j) {
-			int elem = j;
-			if(elem < a[i - 1]) {
-				dp[i][elem] = 0;
-			}
-			else if(a[i - 1] <= elem && elem <= c[i - 1]) {
-				dp[i][elem] = dp[i][elem - 1] + dp[i - 1][elem];
-			}
-			else {
-				dp[i][elem] = dp[i][elem - 1];
-			}
-		}
-	}
-	cout << dp[n][M];
+    cin >> n;
+	dp.assign(n + 1, vector<int>(n + 1, -1));
+	cin >> s >> t;
+	int op = dfs(n - 1, 0);
+	assert(op != -1);
+	if(op == 0) cout << "NO";
+	else cout << "YES";
 	return 0;
 }
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    bool test = false;
+    bool test = true;
 	int TET = 1;
     if(test) cin >> TET;
     cout << fixed << setprecision(6);
     for (int i = 1; i <= TET; i++) {
+		cout << "Case " << i << ": ";
 		#ifdef LOCAL
         	cout << "##################" << '\n';
 		#endif

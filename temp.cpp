@@ -14,43 +14,30 @@ const int MOD = 1000000007;
 
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
-const int M = 1000;
+vector<int> order;
+int mat[6][6];
+void rec(int n, int select, int i) {
+	if(select == 0) {
+		int c = 1;
+		for(auto val : order) {
+			mat[val][c++]++;
+		}
+		return;
+	}
+	if(i > n) return;
+	// Either select or not select
+	
+}
 // *-> KISS*
 int solve() {
-    int n; cin >> n;
-	vector<int> a(n), c(n);
-	for(int i = 0; i < n; ++i) {
-		cin >> a[i];
-	}
-	for(int i = 0; i < n; ++i) {
-		cin >> c[i];
-	}
-	vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
-	for(int i = 0; i <= M; ++i) {
-		dp[0][i] = 1;
-	}
-	for(int i = 1; i <= n; ++i) {
-		/* if(i == 1) { */
-		/* 	for(int j = 1, cc = 0; j <= M; ++j) { */
-		/* 		if(a[i - 1] <= j && j <= c[i - 1]) ++cc; */
-		/* 		dp[i][j] = cc; */
-		/* 	} */
-		/* 	continue; */
-		/* } */
-		for(int j = 1; j <= M; ++j) {
-			int elem = j;
-			if(elem < a[i - 1]) {
-				dp[i][elem] = 0;
-			}
-			else if(a[i - 1] <= elem && elem <= c[i - 1]) {
-				dp[i][elem] = dp[i][elem - 1] + dp[i - 1][elem];
-			}
-			else {
-				dp[i][elem] = dp[i][elem - 1];
-			}
+	for(int i = 0; i <= 5; ++i) {
+		for(int j = 0; j <= 5; ++j) {
+			mat[i][j] = 0;
 		}
 	}
-	cout << dp[n][M];
+	for(int i = 1; i <= 5; ++i) {
+		rec(5, i, 0);
+	}
 	return 0;
 }
 int32_t main() {
